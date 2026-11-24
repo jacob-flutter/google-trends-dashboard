@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flutter UKI industry demand dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="data/trends.js"></script>
+<script src="data/fixtures.js"></script>
+<script src="data/gsc.js"></script>
+<script src="data/social.js"></script>
+<style>
+:root{
+  color-scheme: light;
+  --page:#f3f5f8; --surface:#ffffff; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+  --grid:#e9e8e3; --axis:#c3c2b7; --ring:rgba(11,11,11,0.09);
+  --nav1:#0b1f3a; --nav2:#123f73; --navink:#dfe7f2; --navmuted:#8ea3bf;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#008300; --s7:#6250d6; --s8:#e34948;
+  --comp:#c3c2b7; --up:#006300; --upbg:#e4f3e4; --down:#b42323; --downbg:#fbe5e5; --flat:#52514e; --flatbg:#efeeea;
+  --band:rgba(42,120,214,0.08); --band2:rgba(235,104,52,0.09); --warnbg:#fff4d6; --warnline:#f1c75b;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--page);color:var(--ink);font:13.5px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;display:flex;align-items:flex-start;min-height:100vh}
+aside{width:228px;flex:none;background:linear-gradient(180deg,var(--nav1),var(--nav2));color:var(--navink);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{padding:18px 18px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
+.brand b{display:block;font-size:14.5px;color:#fff}
+.brand span{font-size:11.5px;color:var(--navmuted)}
+.navsec{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--navmuted);padding:16px 18px 6px}
+aside a{display:flex;gap:10px;align-items:baseline;color:var(--navink);text-decoration:none;padding:7px 18px;font-size:13px;border-left:3px solid transparent}
+aside a i{font-style:normal;font-size:10.5px;color:var(--navmuted);width:16px}
+aside a:hover{background:rgba(255,255,255,.06)}
+aside a.on{background:rgba(255,255,255,.10);border-left-color:#7fb2f0;color:#fff;font-weight:600}
+.navfoot{margin-top:auto;padding:14px 18px;font-size:11px;color:var(--navmuted);border-top:1px solid rgba(255,255,255,.08)}
+.navfoot a{display:inline;padding:0;border:0;color:#b8cbe4;font-size:11px}
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{background:var(--surface);border-bottom:1px solid var(--ring);padding:12px 26px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:4}
+.topbar h1{font-size:14px;margin:0;font-weight:650}
+.topbar .st{margin-left:auto;font-size:12px;color:var(--ink2)}
+.page{display:none;padding:22px 26px 60px;max-width:1360px}
+.page.on{display:block}
+.eyebrow{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 2px}
+h2{font-size:20px;margin:0 0 4px;font-weight:650;letter-spacing:-.01em}
+h3{font-size:13.5px;margin:0 0 2px;font-weight:620}
+.lede{color:var(--ink2);margin:0 0 16px;max-width:860px}
+.note{font-size:12px;color:var(--ink2);margin:0 0 10px}
+.muted{color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--ring);border-radius:10px;padding:14px 16px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr)}
+.g2e{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.tile .lab{font-size:12px;color:var(--ink2);font-weight:600}
+.tile .big{font-size:30px;font-weight:680;letter-spacing:-.02em;margin:4px 0 2px}
+.tile .sub{font-size:12px;color:var(--ink2)}
+.tile .rows{margin-top:6px;font-size:12.5px}
+.tile .rows div{display:flex;justify-content:space-between;padding:2px 0}
+.up{color:var(--up)} .down{color:var(--down)} .flat{color:var(--flat)}
+.chip{display:inline-block;font-size:12px;font-weight:600;padding:1px 7px;border-radius:5px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chip.up{background:var(--upbg)} .chip.down{background:var(--downbg)} .chip.flat{background:var(--flatbg)}
+.sig{font-size:11.5px;padding:1px 8px;border-radius:999px;border:1px solid var(--axis);color:var(--ink2);white-space:nowrap}
+.sig.above{border-color:#9bd39b;color:var(--up);background:var(--upbg)}
+.sig.below{border-color:#efb1b1;color:var(--down);background:var(--downbg)}
+.pill{display:inline-block;font-size:11px;padding:0 7px;border-radius:999px;border:1px solid var(--axis);color:var(--ink2);margin-left:4px;vertical-align:1px}
+.warn{background:var(--warnbg);border:1px solid var(--warnline);border-radius:8px;padding:7px 12px;font-size:12px;color:#5c4400;margin:0 0 14px}
+ul.bul{margin:0;padding-left:18px} ul.bul li{margin:5px 0}
+.controls{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;margin:0 0 14px}
+.ctl label{display:block;font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+select{font:inherit;font-size:13px;color:var(--ink);background:var(--surface);border:1px solid var(--axis);border-radius:7px;padding:5px 8px;max-width:340px}
+.seg{display:inline-flex;border:1px solid var(--axis);border-radius:7px;overflow:hidden}
+.seg button{font:inherit;font-size:12.5px;border:0;background:var(--surface);color:var(--ink2);padding:5px 10px;cursor:pointer;border-right:1px solid var(--axis)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:#e6eefb;color:#174a8b;font-weight:600}
+button.btn{font:inherit;font-size:12.5px;border:1px solid var(--axis);background:var(--surface);border-radius:7px;padding:5px 11px;cursor:pointer;color:var(--ink)}
+button.btn.dark{background:#0b1f3a;color:#fff;border-color:#0b1f3a}
+.chartbox{position:relative;height:300px}
+.chartbox.tall{height:360px} .chartbox.short{height:230px}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--grid);vertical-align:middle}
+th{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;white-space:nowrap}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+tr.ours td:first-child{font-weight:650}
+tr.grp td{background:#f7f8fa;font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--ink2);margin-top:6px}
+.evlist{list-style:none;margin:0;padding:0}
+.evlist li{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--grid);font-size:12.5px}
+.evlist .d{min-width:112px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.evlist .n{flex:1}
+.evlist.m li{padding:4px 0}
+.evlist.m .d{min-width:74px}
+.evlist.m .muted{font-size:11px;white-space:nowrap}
+.empty{padding:28px;text-align:center;color:var(--down)}
+pre.flash{white-space:pre-wrap;font:12.5px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;background:#f7f8fa;border:1px solid var(--grid);border-radius:8px;padding:12px;margin:0}
+.secgap{margin-top:14px}
+.vtabs{display:inline-flex;background:#e9edf3;border-radius:9px;padding:3px;gap:2px}
+.vtabs button{font:inherit;font-size:13px;font-weight:600;border:0;background:transparent;color:var(--ink2);padding:6px 16px;border-radius:7px;cursor:pointer}
+.vtabs button[aria-pressed="true"]{background:#0b1f3a;color:#fff}
+input[type=date],input[type=url],input[type=text]{font:inherit;font-size:13px;color:var(--ink);background:var(--surface);border:1px solid var(--axis);border-radius:7px;padding:5px 8px}
+.pngbar{display:flex;justify-content:flex-end;margin:-4px 0 4px}
+.pngbar button{font:inherit;font-size:11.5px;border:1px solid var(--axis);background:var(--surface);color:var(--ink2);border-radius:6px;padding:2px 9px;cursor:pointer}
+.pngbar button:hover{color:var(--ink);border-color:var(--ink2)}
+.drop{display:block;border:2px dashed var(--axis);border-radius:10px;padding:18px;text-align:center;color:var(--ink2);background:#fafbfc;cursor:pointer}
+.drop.over{border-color:#2a78d6;background:#eef4fd}
+.ds{display:flex;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--grid);font-size:12.5px}
+.ds .src{font-size:11px;color:var(--muted)}
+@media (max-width:1100px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.g2,.g2e{grid-template-columns:1fr}}
+@media (max-width:760px){body{display:block}aside{width:auto;height:auto;position:static}.tiles{grid-template-columns:1fr}.page{padding:16px}}
+</style>
+</head>
+<body>
+<aside>
+  <div class="brand"><b>Flutter UKI</b><span>Industry demand dashboard · Google Trends · United Kingdom</span></div>
+  <div class="navsec">Demand</div>
+  <a data-k="overview" href="#overview"><i>01</i>Overview</a>
+  <a data-k="event" href="#event"><i>02</i><span id="navEvent">Event Demand</span></a>
+  <a data-k="weekly" href="#weekly"><i>03</i>Weekly Analysis</a>
+  <a data-k="monthly" href="#monthly"><i>04</i>Monthly Analysis</a>
+  <a data-k="outlook" href="#outlook"><i>05</i>Outlook (26 weeks)</a>
+  <a data-k="calendar" href="#calendar"><i>06</i>Calendar</a>
+  <div class="navsec">Brand</div>
+  <a data-k="brand" href="#brand"><i>07</i>Brand Intelligence</a>
+  <div class="navsec">Entertainment</div>
+  <a data-k="tv" href="#tv"><i>08</i>TV &amp; Entertainment</a>
+  <div class="navsec">Search</div>
+  <a data-k="search" href="#search"><i>09</i>SEO &amp; Search Intelligence</a>
+  <a data-k="gsc" href="#gsc"><i>10</i>Search Console (CSV)</a>
+  <div class="navsec">Outputs</div>
+  <a data-k="reporting" href="#reporting"><i>11</i>Reporting &amp; Exports</a>
+  <div class="navfoot">Index values are relative (0–100), not search volumes. UK only (Google Trends geo GB).<br><a data-k="reporting" href="#reporting">Data status &amp; limitations</a><br><br>Created by Jacob Whitmore (Flutter UKI SEO)</div>
+</aside>
+
+<div class="main">
+<div class="topbar"><div class="vtabs" id="vtabs" role="group" aria-label="Dashboard"><button data-v="sportsbook" aria-pressed="true">Sportsbook</button><button data-v="gaming" aria-pressed="false">Gaming</button></div><h1 id="pageTitle">Overview</h1><span class="st" id="status"></span></div>
+
+<!-- 01 OVERVIEW -->
+<section class="page" id="p-overview">
+  <p class="eyebrow" id="ovEyebrow">UK betting market · Monday morning view</p>
+  <h2 id="ovH2">Market demand overview</h2>
+  <p class="lede" id="ovLede"></p>
+  <div class="tiles" id="ovTiles"></div>
+  <div class="card"><h3>What changed</h3><ul class="bul" id="ovBullets"></ul></div>
+  <div class="grid g2 secgap">
+    <div class="card"><h3 id="ovChartTitle">“betting”: this year vs last year, daily</h3><p class="note">Same weekdays last year. Shaded bands are fixtures.</p><div class="chartbox"><canvas id="ovChart"></canvas></div><div class="legend" id="ovLegend"></div></div>
+    <div class="card"><h3 id="ovCalTitle">Sporting calendar</h3><p class="note" id="ovCalNote">Last week and the week ahead. Major fixtures in bold.</p><div id="ovCal"></div></div>
+  </div>
+  <div class="card secgap"><h3>Key movements</h3><p class="note" id="ovTableNote"></p><div style="overflow-x:auto"><table id="ovTable"></table></div></div>
+</section>
+
+<!-- 02 EVENT DEMAND -->
+<section class="page" id="p-event">
+  <p class="eyebrow">Event demand</p>
+  <h2 id="evH2">Event &amp; competition demand</h2>
+  <p class="lede" id="evLede">How sport and tent-pole events drive UK betting search. Each panel is one Google Trends request (up to five terms on one scale): compare shapes and timing, not levels across panels.</p>
+  <div class="card">
+    <div class="controls">
+      <div class="ctl"><label>Panel</label><select id="evGroup"></select></div>
+      <div class="ctl"><label>Smoothing</label><span class="seg" id="evSmooth"><button aria-pressed="false" data-v="1">Weekly</button><button aria-pressed="true" data-v="4">4-week average</button></span></div>
+      <div class="ctl"><label>Range</label><span class="seg" id="evRange"><button aria-pressed="false" data-v="104">2 years</button><button aria-pressed="true" data-v="0">5 years</button></span></div>
+    </div>
+    <div class="chartbox tall"><canvas id="evChart"></canvas></div><div class="legend" id="evLegend"></div>
+  </div>
+  <div class="card secgap" id="evDailyCard"><h3 id="evDailyTitle">Sport drivers, last 90 days (daily)</h3><div class="chartbox short"><canvas id="evDaily"></canvas></div><div class="legend" id="evDailyLegend"></div></div>
+  <div class="card secgap"><h3 id="impactTitle">Fixture impact</h3><p class="note" id="impactNote">Average index in the event week(s) against the median of the six weeks before. Which fixtures move UK betting search, and for whom.</p><div style="overflow-x:auto"><table id="impactTable"></table></div></div>
+</section>
+
+<!-- 03 WEEKLY -->
+<section class="page" id="p-weekly">
+  <p class="eyebrow">Weekly analysis</p>
+  <h2>Week vs previous week vs last year</h2>
+  <p class="lede">Monday–Sunday weeks. Last year is the same weekdays 52 weeks earlier, pulled in the same request so the two are on one scale.</p>
+  <div class="controls">
+    <div class="ctl"><label>Week</label><select id="wkWeek"></select></div>
+    <div class="ctl"><label>Search term / brand</label><select id="wkTerm"></select></div>
+  </div>
+  <div class="grid g2">
+    <div class="card"><h3 id="wkChartTitle"></h3><div class="chartbox"><canvas id="wkChart"></canvas></div><div class="legend" id="wkLegend"></div></div>
+    <div class="card"><h3 id="wkFixTitle">Fixtures that week</h3><div id="wkFix"></div></div>
+  </div>
+  <div class="card secgap"><h3>All terms for the selected week</h3><div style="overflow-x:auto"><table id="wkTable"></table></div></div>
+</section>
+
+<!-- 04 MONTHLY -->
+<section class="page" id="p-monthly">
+  <p class="eyebrow">Month-end reporting</p>
+  <h2>Monthly analysis: month vs last year</h2>
+  <p class="lede">Month-to-date (or a completed month) against the same weekdays last year and two years ago.</p>
+  <div class="controls"><div class="ctl"><label>Reporting month</label><select id="moMonth"></select></div></div>
+  <div class="grid g2e">
+    <div class="card"><h3 id="moChartTitle"></h3><div class="chartbox tall"><canvas id="moChart"></canvas></div></div>
+    <div class="card"><h3>Underlying averages</h3><div style="overflow-x:auto"><table id="moTable"></table></div></div>
+  </div>
+  <div class="card secgap">
+    <div class="controls"><div class="ctl"><label>Longer view: monthly average, last 24 months</label><select id="moTerm"></select></div></div>
+    <div class="chartbox"><canvas id="moLong"></canvas></div><div class="legend" id="moLongLegend"></div>
+  </div>
+</section>
+
+<!-- 05 OUTLOOK -->
+<section class="page" id="p-outlook">
+  <p class="eyebrow">Future</p>
+  <h2>26-week outlook</h2>
+  <p class="lede">Seasonal forecast: the same weeks in each of the last two years, scaled by how the last eight weeks compare with the same weeks in those years. Upcoming fixtures are marked.</p>
+  <div class="card">
+    <div class="controls"><div class="ctl"><label>Search term / brand</label><select id="fcTerm"></select></div><span class="note" id="fcAcc" style="margin:0 0 6px"></span></div>
+    <div class="chartbox tall"><canvas id="fcChart"></canvas></div><div class="legend" id="fcLegend"></div>
+  </div>
+  <div class="grid g2e secgap">
+    <div class="card"><h3>Peak weeks ahead</h3><div style="overflow-x:auto"><table id="peakTable"></table></div></div>
+    <div class="card"><h3 id="fcNextTitle">Next major fixtures</h3><ul class="evlist" id="nextEvents"></ul></div>
+  </div>
+</section>
+
+<!-- 06 CALENDAR -->
+<section class="page" id="p-calendar">
+  <p class="eyebrow">Context</p>
+  <h2>Sporting and TV calendar</h2>
+  <p class="lede">Football fixtures and results come from ESPN's public scoreboard (Premier League, Championship, Scottish Premiership, FA Cup, Carabao Cup, Champions League, Europa League, home-nation internationals), refreshed daily. Racing, darts, rugby, tournaments, TV series and market events are maintained by hand in <code>data/fixtures.json</code>.</p>
+  <div id="popWrap">
+  <div class="controls"><div class="ctl"><label>Week (Mon–Sun)</label><select id="popWeek"></select></div><span class="note" style="margin:0 0 6px;max-width:640px">Fixture popularity scores every match by competition, size of the two clubs and rivalry, then adds them up. Use it to see whether a week had a stronger or weaker fixture list than the same week last year before comparing demand.</span></div>
+  <div class="tiles" id="popTiles"></div>
+  <div class="grid g2">
+    <div class="card"><h3 id="popDayTitle">Popularity score by day and competition</h3><div class="chartbox"><canvas id="popDay"></canvas></div><div class="legend" id="popDayLegend"></div></div>
+    <div class="card"><h3>Weekend vs midweek</h3><table id="popSplit"></table><h3 style="margin-top:14px">By competition</h3><div style="overflow-x:auto"><table id="popComp"></table></div></div>
+  </div>
+  <div class="grid g2e secgap">
+    <div class="card"><h3>Weekly fixture popularity: this season vs last season</h3><p class="note">Last season is the week 364 days earlier, so weekdays line up.</p><div class="chartbox"><canvas id="popWeeks"></canvas></div><div class="legend" id="popWeeksLegend"></div></div>
+    <div class="card"><h3>Most popular fixtures that week</h3><div id="popTop"></div><h3 style="margin-top:14px">Same week last year</h3><div id="popTopLY"></div></div>
+  </div>
+  <div class="card secgap note" id="popHow"></div>
+  <div style="height:14px"></div>
+</div>
+  <div class="card" id="calFootCard" style="margin-bottom:14px"><h3>Football matches per week (Mon–Sun)</h3><p class="note" id="calNote"></p><div class="chartbox short"><canvas id="calChart"></canvas></div><div class="legend" id="calLegend"></div></div>
+  <div class="controls"><div class="ctl"><label>Type</label><select id="calType"><option value="">All</option><option>football</option><option>racing</option><option>darts</option><option>rugby</option><option>tournament</option><option>tv</option><option>regulation</option><option>other</option></select></div></div>
+  <div class="grid g2e">
+    <div class="card"><h3>Upcoming</h3><ul class="evlist" id="calUp"></ul></div>
+    <div class="card"><h3>Previous 12 months</h3><ul class="evlist" id="calPast"></ul></div>
+  </div>
+</section>
+
+<!-- 07 BRAND -->
+<section class="page" id="p-brand">
+  <p class="eyebrow">Separate from event demand</p>
+  <h2>Brand intelligence</h2>
+  <p class="lede" id="brLede"></p>
+  <div class="warn">Relative Google Trends interest. Not market share, revenue or brand consideration. Check Search Console for absolute brand demand.</div>
+  <div class="card"><h3 id="brTableTitle">Brand scorecard</h3><p class="note" id="brNote"></p><div style="overflow-x:auto"><table id="brTable"></table></div></div>
+  <div class="card secgap" id="brSeg" style="display:none"></div>
+  <div class="card secgap">
+    <div class="controls">
+      <div class="ctl"><label>Highlight competitor</label><select id="brHi"></select></div>
+      <div class="ctl"><label>Range</label><span class="seg" id="brRange"><button aria-pressed="true" data-v="104">2 years</button><button aria-pressed="false" data-v="0">5 years</button></span></div>
+    </div>
+    <h3>Brand search interest, weekly, one scale (4-week average)</h3>
+    <div class="chartbox tall"><canvas id="brChart"></canvas></div><div class="legend" id="brLegend"></div>
+  </div>
+  <div class="grid g2e secgap">
+    <div class="card"><h3>Share of brand search</h3><p class="note" id="brShareNote"></p><div class="chartbox tall"><canvas id="brShare"></canvas></div></div>
+    <div class="card" id="brDailyCard"><h3 id="brDailyTitle">Last 90 days, daily</h3><div class="chartbox tall"><canvas id="brDaily"></canvas></div><div class="legend" id="brDailyLegend"></div></div>
+  </div>
+</section>
+
+<!-- 08 TV -->
+<section class="page" id="p-tv">
+  <p class="eyebrow">Entertainment · shared by Sportsbook and Gaming</p>
+  <h2>TV &amp; entertainment demand</h2>
+  <p class="lede">UK search interest in the TV shows that drive specials betting and gaming content, with a place to log social posts against them. Use it to time content to when a show is peaking and to see what demand did around each post.</p>
+  <div class="grid g2">
+    <div class="card">
+      <div class="controls">
+        <div class="ctl"><label>Panel</label><select id="tvGroup"></select></div>
+        <div class="ctl"><label>Range</label><span class="seg" id="tvRange"><button aria-pressed="true" data-v="104">2 years</button><button aria-pressed="false" data-v="0">5 years</button></span></div>
+      </div>
+      <h3>Show demand, weekly (shaded bands are series on air)</h3>
+      <div class="chartbox tall"><canvas id="tvChart"></canvas></div><div class="legend" id="tvLegend"></div>
+    </div>
+    <div class="card"><h3>On air and coming up</h3><ul class="evlist" id="tvCal"></ul><h3 style="margin-top:14px">Recently finished</h3><ul class="evlist" id="tvCalPast"></ul><p class="note" style="margin-top:8px">Kept by hand in <code>data/fixtures.json</code> (type <code>tv</code>). “Dates approx.” means not confirmed by the broadcaster.</p></div>
+  </div>
+  <div class="card secgap"><h3>Shows: last week vs previous week vs last year</h3><p class="note">Each show against its own past (daily data, same weekdays last year).</p><div style="overflow-x:auto"><table id="tvTable"></table></div></div>
+  <div class="card secgap">
+    <h3>Social content</h3>
+    <p class="note">Log a social post against a show. It is marked on the chart on the day it went live, and the table shows what search interest did around it. Posts you add stay in this browser; to share them with everyone, copy the JSON into <code>data/social.json</code>. This shows timing, not proof that a post caused the change.</p>
+    <div class="controls">
+      <div class="ctl"><label>Show</label><select id="tvShow"></select></div>
+      <div class="ctl"><label>Platform</label><select id="socPlatform"><option>X</option><option>Instagram</option><option>TikTok</option><option>Facebook</option><option>YouTube</option><option>Other</option></select></div>
+      <div class="ctl"><label>Date posted</label><input type="date" id="socDate"></div>
+      <div class="ctl" style="flex:1;min-width:220px"><label>Link to post</label><input type="url" id="socUrl" placeholder="https://…" style="width:100%"></div>
+      <div class="ctl" style="flex:1;min-width:180px"><label>Note</label><input type="text" id="socNote" placeholder="e.g. winner odds graphic" style="width:100%"></div>
+      <button class="btn dark" id="socAdd">Add post</button>
+      <button class="btn" id="socCopy">Copy all as JSON</button>
+    </div>
+    <p class="note" id="socMsg"></p>
+    <h3 id="tvShowTitle"></h3>
+    <div class="chartbox"><canvas id="tvShowChart"></canvas></div><div class="legend" id="tvShowLegend"></div>
+    <div style="overflow-x:auto;margin-top:12px"><table id="tvPosts"></table></div>
+  </div>
+</section>
+
+<!-- 09 SEARCH -->
+<section class="page" id="p-search">
+  <p class="eyebrow">Search</p>
+  <h2>SEO &amp; search intelligence</h2>
+  <p class="lede" id="searchLede"></p>
+  <div class="grid g3" id="related"></div>
+  <div class="card secgap"><h3>Search terms year on year (weekly data)</h3><p class="note">Last 4 complete weeks against the same weeks last year, and 13-week momentum.</p><div style="overflow-x:auto"><table id="yoyTable"></table></div></div>
+</section>
+
+<!-- 09 SEARCH CONSOLE -->
+<section class="page" id="p-gsc">
+  <p class="eyebrow">Search · your own data</p>
+  <h2>Search Console: clicks and impressions vs Google Trends</h2>
+  <p class="lede">Upload Google Search Console <b>Performance</b> exports (Dates.csv, Queries.csv, Pages.csv) for any Flutter sportsbook or gaming site. Filter the export to <b>Country = United Kingdom</b> and choose up to 16 months so year-on-year works. Uploads stay in this browser. To share them with everyone, commit the CSVs to <code>data/gsc/&lt;property&gt;/</code> in the repo.</p>
+  <div class="grid g2e">
+    <div class="card">
+      <h3>Add CSVs</h3>
+      <div class="controls" style="margin:6px 0 10px">
+        <div class="ctl"><label>Property</label><select id="gscProp"></select></div>
+      </div>
+      <label class="drop" id="gscDrop"><input type="file" id="gscFile" accept=".csv,text/csv" multiple hidden><b>Drop CSV files here</b> or click to choose<br><span class="note">Dates.csv, Queries.csv and/or Pages.csv from one property</span></label>
+      <p class="note" id="gscMsg" style="margin-top:8px"></p>
+    </div>
+    <div class="card"><h3>Loaded data</h3><div id="gscList"></div><p class="note" style="margin-top:8px">“Repo” files are shared via <code>data/gsc/</code>. “This browser” files are only on this device.</p></div>
+  </div>
+  <div id="gscBody"></div>
+</section>
+
+<!-- 10 REPORTING -->
+<section class="page" id="p-reporting">
+  <p class="eyebrow">Outputs</p>
+  <h2>Reporting &amp; exports</h2>
+  <div class="grid g2e">
+    <div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><h3 style="margin:0">Weekly flash summary</h3><button class="btn dark" id="copyFlash" style="margin-left:auto">Copy</button></div><pre class="flash" id="flash"></pre></div>
+    <div class="card"><h3>Exports (CSV)</h3><p class="note">Every chart also has a ⤓ PNG button (top right of the chart).</p><div id="exports" style="display:flex;flex-direction:column;gap:8px"></div></div>
+  </div>
+  <div class="card secgap"><h3>Data status</h3><p class="note" id="statusNote"></p><div style="overflow-x:auto"><table id="statusTable"></table></div></div>
+  <div class="card secgap note">
+    <h3>Method and limitations</h3>
+    <ul class="bul">
+      <li><b>United Kingdom only.</b> Every request uses Google Trends geo GB (England, Scotland, Wales, Northern Ireland).</li>
+      <li><b>Relative interest, not volume.</b> Each value is a term's share of all UK Google searches, scaled 0–100 within one request. A falling index can sit alongside flat absolute searches when total search grows.</li>
+      <li><b>Week, month and year-on-year views</b> come from one request per term covering the last 120 days plus the same weekdays one and two years earlier, so the years share a scale. Weeks run Monday–Sunday. The latest partial day is excluded.</li>
+      <li><b>Five-year and brand-comparison views</b> are weekly (weeks start Sunday). Brands are joined onto one scale through an anchor brand that sits in every brand request (bet365 for Sportsbook, Sky Vegas for Gaming). Share of brand search is each brand's part of the total across the tracked brands, not market share.</li>
+      <li><b>Insufficient signal</b> means the term is too sparse to compare: a weekly average below 3 on its scale, or two or more zero days (Google returns zeros for low-volume days). Those rows are left out of averages and charts.</li>
+      <li><b>Forecast</b> is seasonal naive with a year-on-year trend factor (×0.5–×2 cap). It knows the calendar only through history.</li>
+      <li><b>Gaming</b>: brand terms are the product names as typed ("sky vegas", "paddy power games"). Smaller products such as Betfair Bingo often have too little UK search volume for daily comparisons and are marked too sparse.</li>
+      <li><b>TV &amp; entertainment</b>: show names are broad searches (viewers, not only bettors). Social posts are marked by date; the change around a post is timing, not proof of cause.</li>
+      <li><b>Ambiguous terms</b>: "coral", "boxing", "world cup", "starburst" and some show names include unrelated searches. Rising "not on GamStop" queries are unlicensed-operator demand, a compliance signal rather than a traffic target.</li>
+      <li><b>Refresh</b>: a daily GitHub Action re-pulls the daily and year-on-year data and, about once a week, the five-year data. Failed pulls keep the last good copy and are flagged as stale above.</li>
+    </ul>
+  </div>
+</section>
+</div>
+
+<script id="analytics">
+/* ---------- pure analytics (no DOM) ---------- */
+const WEEK = 7*864e5, DAY = 864e5;
+function groupSeries(G, gid, term){
+  const g = G[gid]; if(!g) return null;
+  const i = g.terms.indexOf(term); if(i<0) return null;
+  return g.t.map((t,k)=>({x:t*1000, y:g.v[k][i], partial:!!g.p[k]}));
+}
+function complete(s){ return s.filter(p=>!p.partial); }
+function mean(a){ a=a.filter(v=>v!==undefined && v!==null && !Number.isNaN(v)); return a.length? a.reduce((x,y)=>x+y,0)/a.length : NaN; }
+function median(a){ if(!a.length) return NaN; const b=[...a].sort((x,y)=>x-y); const m=b.length>>1; return b.length%2?b[m]:(b[m-1]+b[m])/2; }
+function pct(a,b){ return (b>0 && isFinite(a)) ? (a/b-1)*100 : NaN; }
+function smooth(s,n){ if(n<=1) return s; return s.map((p,i)=>{ const w=s.slice(Math.max(0,i-n+1),i+1).map(q=>q.y); return {...p, y: mean(w)}; }); }
+function yoy(s, n=4){
+  const c = complete(s); const L=c.length;
+  if(L < 52+n) return {now:NaN, ly:NaN, chg:NaN};
+  const now = mean(c.slice(L-n).map(p=>p.y)), ly = mean(c.slice(L-n-52, L-52).map(p=>p.y));
+  return {now, ly, chg:pct(now,ly)};
+}
+function momentum(s, n=13){
+  const c = complete(s), L=c.length; if(L<2*n) return NaN;
+  return pct(mean(c.slice(L-n).map(p=>p.y)), mean(c.slice(L-2*n,L-n).map(p=>p.y)));
+}
+function stitchBrands(G, gids, anchor){
+  const base = G[gids[0]]; const baseIdx = base.terms.indexOf(anchor);
+  const baseMap = new Map(base.t.map((t,k)=>[t, base.v[k][baseIdx]]));
+  const out = {};
+  for(const gid of gids){
+    const g = G[gid]; if(!g) continue;
+    const ai = g.terms.indexOf(anchor); let sb=0, sg=0;
+    g.t.forEach((t,k)=>{ if(baseMap.has(t) && !g.p[k]){ sb+=baseMap.get(t); sg+=g.v[k][ai]; } });
+    const f = sg>0 ? sb/sg : 1;
+    g.terms.forEach((term,i)=>{ if(out[term]) return; out[term] = g.t.map((t,k)=>({x:t*1000, y:g.v[k][i]*f, partial:!!g.p[k]})); });
+  }
+  return out;
+}
+function shareOfSearch(brandSeries, brands, n=4, offset=0){
+  const vals = {}; let tot=0;
+  for(const b of brands){ const c = complete(brandSeries[b]); const L=c.length; const v = mean(c.slice(L-n-offset, L-offset).map(p=>p.y)); vals[b]=v; tot+=v; }
+  const sh={}; for(const b of brands) sh[b]= tot>0 ? vals[b]/tot*100 : NaN; return sh;
+}
+function forecast(s, H=26, years=2, originBack=0){
+  const c = complete(s); const L = c.length - originBack; if(L < 52*years+12) return null;
+  const a = c.map(p=>p.y); const last = L-1;
+  const win = (idx)=> mean([a[idx-1],a[idx],a[idx+1]]);
+  const lyRecent=[]; for(let k=1;k<=years;k++) lyRecent.push(mean(a.slice(L-8-52*k, L-52*k)));
+  let r = mean(a.slice(L-8, L)) / mean(lyRecent); if(!isFinite(r)||r<=0) r=1; r = Math.min(2, Math.max(0.5, r));
+  const out=[];
+  for(let h=1; h<=H; h++){
+    const per=[]; for(let k=1;k<=years;k++){ const idx = last + h - 52*k; if(idx>=1) per.push(win(idx)); }
+    if(!per.length) break;
+    out.push({x: c[last].x + h*WEEK, y: mean(per)*r, lo: Math.min(...per)*r, hi: Math.max(...per)*r});
+  }
+  return {points:out, trend:r};
+}
+function backtest(s, H=26){
+  const f = forecast(s, H, 2, H); if(!f) return NaN;
+  const act = new Map(complete(s).map(p=>[p.x,p.y])); let sa=0, sf=0;
+  for(const p of f.points){ const y = act.get(p.x); if(y===undefined) continue; sa+=y; sf+=p.y; }
+  return sa>0 ? Math.abs(sf-sa)/sa*100 : NaN;
+}
+function weekOverlaps(wx, ev){ const s = Date.parse(ev.start), e = Date.parse(ev.end||ev.start) + DAY - 1; return wx <= e && wx + WEEK - 1 >= s; }
+function eventUplift(s, ev, pre=6){
+  const c = complete(s); const idx = c.map((p,i)=>weekOverlaps(p.x,ev)?i:-1).filter(i=>i>=0);
+  if(!idx.length || idx[0] < pre) return NaN;
+  return pct(mean(idx.map(i=>c[i].y)), median(c.slice(idx[0]-pre, idx[0]).map(p=>p.y)));
+}
+function matchScore(m, FP, uk){
+  const W = FP.competition_weight[m.code] ?? 0.2; const intl = /^fifa\.|^uefa\.nations/.test(m.code); const why=[];
+  const tierOf = t => { for(const [name,tr] of Object.entries(FP.club_tiers)) if(tr.teams.includes(t)) return [tr.score,name]; return null; };
+  const p = t => { if(intl) return FP.nations[t]!==undefined ? [FP.nations[t],'home nation'] : [FP.default_other,null]; return tierOf(t) || [uk.has(t)?FP.default_uk_club:FP.default_other, null]; };
+  const [pa,la]=p(m.home), [pb,lb]=p(m.away); const cap=x=>x.charAt(0).toUpperCase()+x.slice(1);
+  let s = W*(0.5+pa+pb);
+  if(la==='big club' && lb==='big club') why.push('Big-club clash'); else { if(la) why.push(cap(la)+': '+m.home); if(lb) why.push(cap(lb)+': '+m.away); }
+  if((FP.rivalries||[]).some(([a,b])=>(a===m.home&&b===m.away)||(a===m.away&&b===m.home))){ s*=FP.rivalry_multiplier; why.push('Rivalry'); }
+  const isUk = t => uk.has(t) || ['big club','well-supported club'].includes((tierOf(t)||[])[1]);
+  if(/^uefa\.(champions|europa)/.test(m.code) && !isUk(m.home) && !isUk(m.away)){ s*=FP.no_uk_club_multiplier; why.push('No UK club'); }
+  return {score:s, reasons:why};
+}
+function cleanRelated(list){ return (list||[]).filter(([q])=> !/www\.|https?:|\.blog|\.sbs|\.xyz|\.top\b|[\u{1F1E6}-\u{1F1FF}]/u.test(q)); }
+
+/* ----- daily year-on-year (multi-range) ----- */
+function yoyDaily(Y){ /* Y = {t:[start s x3], v:[[...]x3], p:[[...]x3]} */
+  const n = Y.v[0].length; let last = n-1; while(last>0 && Y.p[0][last]) last--;
+  const x0 = Y.t[0]*1000;
+  return {n, last, x:i=>x0+i*DAY, ty:Y.v[0], ly:Y.v[1]||[], ly2:Y.v[2]||[]};
+}
+function mondays(D){ /* start indices of complete Mon-Sun weeks */
+  const out=[]; for(let i=0;i+6<=D.last;i++){ if(new Date(D.x(i)).getUTCDay()===1) out.push(i); } return out;
+}
+function avgRange(arr,a,b){ return mean(arr.slice(Math.max(0,a), b+1)); }
+function weekStats(D, s){
+  const e=s+6; const cur=avgRange(D.ty,s,e);
+  const prev = s-7>=0 ? avgRange(D.ty,s-7,s-1) : NaN;
+  const prev4 = s-28>=0 ? avgRange(D.ty,s-28,s-1) : NaN;
+  const ly=avgRange(D.ly,s,e), ly2=avgRange(D.ly2,s,e);
+  const zeros = D.ty.slice(s,e+1).concat(D.ly.slice(s,e+1)).filter(v=>v===0).length;
+  return {cur, prev, prev4, ly, ly2, zeros, vsPrev:pct(cur,prev), vsPrev4:pct(cur,prev4), vsLY:pct(cur,ly), vsLY2:pct(cur,ly2)};
+}
+function monthStats(D, y, m, toIdx){ /* calendar month (UTC) within series; returns null if month start not covered */
+  let a=-1, b=-1;
+  for(let i=0;i<=D.last;i++){ const d=new Date(D.x(i)); if(d.getUTCFullYear()===y && d.getUTCMonth()===m){ if(a<0) a=i; b=i; } }
+  if(a<0) return null;
+  if(new Date(D.x(a)).getUTCDate()!==1) return null;
+  if(toIdx!==undefined) b=Math.min(b,toIdx);
+  const cur=avgRange(D.ty,a,b), ly=avgRange(D.ly,a,b), ly2=avgRange(D.ly2,a,b);
+  const span=D.ty.slice(a,b+1).concat(D.ly.slice(a,b+1)); const zeroShare=span.filter(v=>v===0).length/span.length;
+  return {a,b,cur,ly,ly2,zeroShare,vsLY:pct(cur,ly),vsLY2:pct(cur,ly2)};
+}
+function signal(st){
+  /* low-volume terms come back from Google with zero days (privacy threshold): too sparse to compare */
+  if(!isFinite(st.cur) || st.cur < 3 || st.zeros >= 2) return 'insufficient';
+  const v = st.vsLY; if(!isFinite(v)) return 'insufficient';
+  return v >= 15 ? 'above' : v <= -15 ? 'below' : 'normal';
+}
+function isoWeek(ms){ const d=new Date(ms); const t=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate())); const day=t.getUTCDay()||7; t.setUTCDate(t.getUTCDate()+4-day); const y0=new Date(Date.UTC(t.getUTCFullYear(),0,1)); return {w:Math.ceil(((t-y0)/864e5+1)/7), y:t.getUTCFullYear()}; }
+</script>
+
+<script>
+/* ======================= rendering ======================= */
+const T = window.TRENDS, FX = (window.FIXTURES||{events:[]}).events;
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const SER = [1,2,3,4,5,6,7,8].map(i=>css('--s'+i));
+const esc = s => String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const NAMEFIX={mrq:'MrQ',leovegas:'LeoVegas',jackpotjoy:'Jackpotjoy'};
+const title = s => NAMEFIX[s] || String(s).replace(/(^|\s)\w/g,c=>c.toUpperCase()).replace('Bet365','bet365');
+const sgn = v => !isFinite(v) ? '–' : (v>0?'▲ +':v<0?'▼ ':'')+(Math.abs(v)<10?v.toFixed(1):v.toFixed(0))+'%';
+const sgnPlain = v => !isFinite(v) ? 'n/a' : (v>0?'+':'')+(Math.abs(v)<10?v.toFixed(1):v.toFixed(0))+'%';
+const cls = v => !isFinite(v) ? 'flat' : v>0.5 ? 'up' : v<-0.5 ? 'down' : 'flat';
+const chip = v => `<span class="chip ${cls(v)}">${sgn(v)}</span>`;
+const fmtD = (x,o={day:'numeric',month:'short'}) => new Date(x).toLocaleDateString('en-GB',{...o,timeZone:'UTC'});
+const fmtDY = x => fmtD(x,{day:'numeric',month:'short',year:'numeric'});
+const NOW = Date.now();
+
+if(!T || !T.groups){ document.querySelector('.main').innerHTML='<div class="page on"><div class="card empty">No data yet. Run <code>python3 scripts/fetch_trends.py</code> or wait for the first daily GitHub Action.</div></div>'; throw new Error('no data'); }
+const G = T.groups, Y = T.yoy||{}, CFG = T.config||{};
+const AMBIG = CFG.ambiguous_terms||['coral'];
+const DD = {}; for(const t of Object.keys(Y)) DD[t]=yoyDaily(Y[t]);
+const REF = DD['betting'] || DD[Object.keys(DD)[0]];
+const WEEKS = REF ? mondays(REF) : [];
+const LASTW = WEEKS[WEEKS.length-1];
+
+Chart.defaults.font.family='system-ui,-apple-system,"Segoe UI",sans-serif'; Chart.defaults.font.size=11.5;
+Chart.defaults.color=css('--muted'); Chart.defaults.borderColor=css('--grid');
+
+/* status */
+(function(){
+  const st=T.status||{}; const stale=Object.entries(st).filter(([k,v])=>v.error).map(([k])=>k);
+  const p = T.pulled? new Date(T.pulled):null;
+  document.getElementById('status').innerHTML = `UK · Google Trends · ${p? 'refreshed '+p.toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short',timeZone:'UTC'})+' UTC':''} ` +
+    (stale.length? `<span class="pill" style="border-color:var(--warnline);background:var(--warnbg)">⚠ ${stale.length} stale</span>`:(p && (Date.now()-p)/36e5>36 ? `<span class="pill" style="border-color:var(--warnline);background:var(--warnbg)" title="${window.SNAPSHOT?'This is a single-file snapshot. It shows the data it was saved with and cannot update itself. Ask for a newer copy or use the hosted version.':'The daily refresh has not run. See the README.'}">⚠ data ${Math.floor((Date.now()-p)/864e5)||1} day${Math.floor((Date.now()-p)/864e5)>1?'s':''} old${window.SNAPSHOT?' · snapshot file':''}</span>` : `<span class="pill">✓ fresh${window.SNAPSHOT?' · snapshot file':''}</span>`));
+})();
+
+/* fixtures overlay plugin */
+const fixturePlugin = { id:'fixtures',
+  beforeDatasetsDraw(chart,_a,opts){
+    if(!opts||!opts.show) return;
+    const {ctx, chartArea:{top,bottom,left,right}, scales:{x}} = chart; if(!x || x.type!=='linear') return;
+    ctx.save(); let lastLabel=-1e9;
+    for(const ev of FX){
+      if(opts.tier && ev.tier>opts.tier) continue;
+      if(ev.type==='regulation' && !opts.regulation) continue;
+      if((ev.type==='tv') !== !!opts.tv) continue;
+      const s=Date.parse(ev.start), e=Date.parse(ev.end||ev.start)+DAY;
+      let x0=x.getPixelForValue(s), x1=x.getPixelForValue(e); if(x1<left||x0>right) continue;
+      x0=Math.max(left,x0); x1=Math.min(right,Math.max(x1,x0+2));
+      ctx.fillStyle = ev.type==='racing'? css('--band2') : css('--band'); ctx.fillRect(x0,top,x1-x0,bottom-top);
+      if(opts.labels && ev.tier===1 && x0-lastLabel>=14){ lastLabel=x0; ctx.fillStyle=css('--muted'); ctx.font='10px system-ui'; ctx.save(); ctx.translate(x0+3,top+4); ctx.rotate(Math.PI/2); ctx.fillText(ev.name.replace(/ \(.*\)/,''),0,0); ctx.restore(); }
+    }
+    for(const m of (opts.marks||[])){ const xm=x.getPixelForValue(m.x); if(xm<left||xm>right) continue; ctx.strokeStyle=css('--s2'); ctx.lineWidth=1.5; ctx.setLineDash([4,3]); ctx.beginPath(); ctx.moveTo(xm,top+12); ctx.lineTo(xm,bottom); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle=css('--s2'); ctx.beginPath(); ctx.arc(xm,top+8,4,0,Math.PI*2); ctx.fill(); ctx.font='10px system-ui'; ctx.fillText(m.label,xm+7,top+11); }
+    if(opts.today){ const xt=x.getPixelForValue(NOW); if(xt>left&&xt<right){ ctx.strokeStyle=css('--ink2'); ctx.setLineDash([3,3]); ctx.beginPath(); ctx.moveTo(xt,top); ctx.lineTo(xt,bottom); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle=css('--ink2'); ctx.font='11px system-ui'; ctx.fillText('today',xt+4,bottom-6);} }
+    ctx.restore();
+  }};
+Chart.register(fixturePlugin);
+const eventsAt = (a,b)=>FX.filter(ev=>{ const s=Date.parse(ev.start), e=Date.parse(ev.end||ev.start)+DAY-1; return s<=b && e>=a; });
+const MATCHES = ((window.FIXTURES||{}).matches||[]).map(r=>({code:r[0], x:Date.parse(r[1]), home:r[2], away:r[3], score:r[4]}));
+const LEAGUE = (window.FIXTURES||{}).leagues||{};
+const PL_TEAMS = new Set(MATCHES.filter(m=>m.code==='eng.1').flatMap(m=>[m.home,m.away]));
+const matchesIn = (a,b)=>MATCHES.filter(m=>m.x>=a && m.x<=b);
+function leagueSummary(list){ const c={}; list.forEach(m=>c[m.code]=(c[m.code]||0)+1); return Object.keys(LEAGUE).filter(k=>c[k]).map(k=>`${LEAGUE[k]} ${c[k]}`).join(' · '); }
+function keyMatches(list, max=8){ return [...list].sort((p,q)=>(q.pop||0)-(p.pop||0)).slice(0,max).sort((p,q)=>p.x-q.x); }
+function matchList(list){ if(!list.length) return ''; return '<ul class="evlist m">'+list.map(m=>`<li><span class="d">${fmtD(m.x,{weekday:'short',day:'numeric',month:'short'})}</span><span class="n">${esc(m.home)} ${m.score?'<b>'+esc(m.score)+'</b>':'v'} ${esc(m.away)}</span><span class="muted">${esc(LEAGUE[m.code]||m.code)}${m.pop!==undefined?' · '+m.pop.toFixed(1):''}</span></li>`).join('')+'</ul>'; }
+function weekFixturesHTML(a){
+  const all=eventsAt(a,a+WEEK-1);
+  if(V==='gaming'){ const tv=all.filter(e=>e.type==='tv'), oth=all.filter(e=>e.type!=='tv'&&(e.tier===1||e.type==='regulation'));
+    return `${tv.length?'<p class="note" style="margin:2px 0 2px"><b>On TV</b></p>'+fixList(tv):''}${oth.length?'<p class="note" style="margin:8px 0 2px"><b>Key dates</b></p>'+fixList(oth):''}${!tv.length&&!oth.length?'<p class="note">Nothing listed.</p>':''}`; }
+  const ev=all.filter(e=>e.type!=='regulation'&&e.type!=='tv'); const ms=matchesIn(a,a+WEEK-1);
+  return `${popLine(a)}${ms.length?`<p class="note" style="margin:2px 0 6px"><b>${ms.length} matches</b>: ${esc(leagueSummary(ms))}</p>`:''}${ev.length?fixList(ev):''}${matchList(keyMatches(ms))}${!ms.length&&!ev.length?'<p class="note">Nothing listed.</p>':''}`;
+}
+const tip = ()=>({backgroundColor:'#fff', titleColor:css('--ink'), bodyColor:css('--ink2'), borderColor:css('--ring'), borderWidth:1, padding:9});
+
+function lineChart(el, datasets, o={}){
+  const old=Chart.getChart(el); if(old) old.destroy();
+  const xs=datasets.flatMap(d=>d.data.map(p=>p.x));
+  const xmin=o.xmin??Math.min(...xs), xmax=o.xmax??Math.max(...xs);
+  return new Chart(el,{type:'line',data:{datasets},options:{responsive:true,maintainAspectRatio:false,animation:false,parsing:false,normalized:true,
+    interaction:{mode:'index',intersect:false}, elements:{point:{radius:0,hoverRadius:4,hitRadius:8},line:{borderWidth:2,tension:.25}},
+    scales:{x:{type:'linear',min:xmin,max:xmax,grid:{display:false},border:{color:css('--axis')},ticks:{maxTicksLimit:o.daily?8:10,callback:v=>fmtD(v,o.daily?{day:'numeric',month:'short'}:{month:'short',year:'2-digit'})}},
+            y:{beginAtZero:true,grid:{color:css('--grid')},border:{display:false},ticks:{maxTicksLimit:6}}},
+    plugins:{legend:{display:false}, fixtures:{show:o.fixtures!==false,labels:o.labels!==false,today:!!o.today,tier:o.tier||2,regulation:!!o.regulation,tv:!!o.tv,marks:o.marks||[]},
+      tooltip:{...tip(), filter:it=>it.dataset.label&&!it.dataset.hideTip,
+        callbacks:{title:it=>it.length?(o.daily?fmtD(it[0].parsed.x,{weekday:'short',day:'numeric',month:'short',year:'numeric'}):'w/c '+fmtDY(it[0].parsed.x)):'',
+          label:it=>` ${it.dataset.label}: ${it.parsed.y.toFixed(1)}`,
+          afterBody:it=>{ if(!it.length) return ''; const x=it[0].parsed.x; const ev=eventsAt(x,x+(o.daily?DAY:WEEK)-1).filter(e=>o.tv?e.type==='tv':e.type!=='tv'); return ev.length?['',...ev.map(e=>'● '+e.name)]:''; }}}}}});
+}
+function barChart(el, labels, datasets, o={}){
+  const old=Chart.getChart(el); if(old) old.destroy();
+  return new Chart(el,{type:'bar',data:{labels,datasets},options:{indexAxis:o.horizontal?'y':'x',responsive:true,maintainAspectRatio:false,animation:false,
+    scales:{x:{grid:{display:!!o.horizontal,color:css('--grid')},border:{color:css('--axis')},ticks:(o.horizontal&&o.pct)?{callback:v=>v+'%'}:{}},
+            y:{grid:{display:!o.horizontal,color:css('--grid')},border:{display:false},ticks:(!o.horizontal&&o.pct)?{color:css('--ink2'),callback:v=>v+'%'}:{color:css('--ink2')}}},
+    plugins:{legend:{display:false},fixtures:{show:false},tooltip:{...tip(),callbacks:{label:it=>` ${it.dataset.label||''}${it.dataset.label?': ':''}${(o.horizontal?it.parsed.x:it.parsed.y).toFixed(1)}${o.pct?'%':''}`}}}}});
+}
+const legend=(el,items)=>{ document.getElementById(el).innerHTML=items.map(([n,c,f])=>`<span><span class="dot" style="background:${c};${f?'opacity:.45':''}"></span>${esc(n)}</span>`).join(''); };
+const weekLabel = s => { const a=REF.x(s); const w=isoWeek(a); return `Wk ${w.w} ${w.y} · ${fmtD(a)} – ${fmtD(a+6*DAY)}`; };
+
+/* ---------- verticals (Sportsbook / Gaming) ---------- */
+const VERTS = CFG.verticals || {};
+const TVC = CFG.tv || {yoy_terms:[]};
+let V=null, VC=null, OURS=[], OUR_COL={}, CAT_TERMS=[], BRAND_TERMS=[], PANELS=[], TERMS={}, BRANDS={}, SHARE_POOL=[], SH_NOW={}, SH_LY={}, ourShare=0, ourShareLY=0, COMPS=[];
+let OVERVIEW=null;
+const aligned = t => Y[t] && REF && DD[t].x(0)===REF.x(0);
+function panelsOf(v){ return Object.entries(CFG.groups||{}).filter(([gid,g])=>g.vertical===v && g.time==='today 5-y' && g.family!=='brand' && G[gid]); }
+function brandsOf(v){ const ids=Object.entries(CFG.groups||{}).filter(([gid,g])=>g.vertical===v&&g.family==='brand'&&G[gid]).map(([gid])=>gid); return ids.length? stitchBrands(G,ids,(VERTS[v]||{}).anchor||G[ids[0]].terms[0]) : {}; }
+const ALLB={}; for(const v of Object.keys(VERTS)) Object.assign(ALLB, brandsOf(v)); /* every brand, for Search Console comparisons */
+const H = k => '#'+(V==='sportsbook'?'':V+'-')+k;
+const sportEv = e => e.type!=='regulation' && e.type!=='tv';
+const vEv = e => V==='gaming' ? e.type!=='regulation' : sportEv(e);
+const weeklySeries = t => TERMS[t]? groupSeries(G,TERMS[t].gid,t) : BRANDS[t] || null;
+const segOf = b => { const S=VC.segments||{}; return Object.keys(S).find(k=>S[k].includes(b))||''; };
+function segShare(seg, off){ const pool=(VC.segments[seg]||[]).filter(b=>SHARE_POOL.includes(b)); if(!pool.length) return null; const sh=shareOfSearch(BRANDS,pool,4,off); const top=[...pool].sort((a,b)=>sh[b]-sh[a])[0]; return {ours:OURS.reduce((s,b)=>s+(sh[b]||0),0), top, topShare:sh[top], n:pool.length}; }
+
+function applyVertical(v){
+  V = VERTS[v]? v : Object.keys(VERTS)[0]; VC = VERTS[V]; OVERVIEW=null;
+  OURS = VC.our_brands; OUR_COL={}; OURS.forEach((b,i)=>OUR_COL[b]=SER[i%SER.length]);
+  CAT_TERMS = VC.category_terms.filter(aligned); BRAND_TERMS = VC.brand_terms.filter(aligned);
+  PANELS = panelsOf(V); TERMS={};
+  for(const [gid,g] of PANELS){ g.terms.forEach((t,i)=>{ const pk=Math.max(...G[gid].v.map(r=>r[i])); if(!TERMS[t]||pk>TERMS[t].pk) TERMS[t]={gid,label:g.label,pk}; }); }
+  BRANDS = brandsOf(V);
+  SHARE_POOL = Object.keys(BRANDS).filter(b=>!AMBIG.includes(b));
+  SH_NOW = SHARE_POOL.length? shareOfSearch(BRANDS,SHARE_POOL,4,0):{}; SH_LY = SHARE_POOL.length? shareOfSearch(BRANDS,SHARE_POOL,4,52):{};
+  ourShare = OURS.reduce((s,b)=>s+(SH_NOW[b]||0),0); ourShareLY = OURS.reduce((s,b)=>s+(SH_LY[b]||0),0);
+  COMPS = Object.keys(BRANDS).filter(b=>!OURS.includes(b));
+  /* selects */
+  evSel.innerHTML = PANELS.map(([gid,g])=>`<option value="${gid}" ${gid===VC.default_panel?'selected':''}>${esc(g.label)}: ${esc(g.terms.join(', '))}</option>`).join('');
+  wkTerm.innerHTML=`<optgroup label="${esc(title(VC.noun))} search terms">${CAT_TERMS.map(t=>`<option>${esc(t)}</option>`).join('')}</optgroup><optgroup label="Brands">${BRAND_TERMS.map(t=>`<option value="${esc(t)}">${esc(title(t))}</option>`).join('')}</optgroup>`;
+  moTerm.innerHTML=Object.keys(TERMS).concat(Object.keys(BRANDS)).map(t=>`<option ${t===VC.headline_term?'selected':''}>${esc(t)}</option>`).join('');
+  fcSel.innerHTML=`<optgroup label="Search terms">${Object.keys(TERMS).map(t=>`<option ${t===VC.headline_term?'selected':''}>${esc(t)}</option>`).join('')}</optgroup><optgroup label="Brands">${Object.keys(BRANDS).map(t=>`<option value="${esc(t)}">${esc(title(t))}</option>`).join('')}</optgroup>`;
+  brHi.innerHTML='<option value="">None</option>'+COMPS.map(b=>`<option ${b===VC.highlight?'selected':''} value="${esc(b)}">${esc(title(b))}</option>`).join('');
+  /* chrome */
+  document.querySelectorAll('#vtabs button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.v===V));
+  document.querySelectorAll('a[data-k]').forEach(a=>a.setAttribute('href',H(a.dataset.k)));
+  const gm = V==='gaming', set=(id,txt)=>{ const el=document.getElementById(id); if(el) el.textContent=txt; };
+  const ourNames = OURS.map(title).join(', ');
+  set('navEvent', gm?'Category Demand':'Event Demand');
+  set('ovEyebrow', `UK ${VC.noun} market · Monday morning view`);
+  set('ovH2', `${VC.label} demand overview`);
+  set('ovChartTitle', `“${VC.headline_term}”: this year vs last year, daily`);
+  set('ovCalTitle', gm?'TV and key dates':'Sporting calendar');
+  set('ovCalNote', gm?'Shows on air and key dates, last week and this week.':'Last week and the week ahead. Major fixtures in bold.');
+  set('evH2', gm?'Category & game demand':'Event & competition demand');
+  set('evLede', gm?'How UK demand for casino, slots, bingo, offers and individual slot titles moves. Each panel is one Google Trends request (up to five terms on one scale): compare shapes and timing, not levels across panels. Shaded bands are major sporting events.':'How sport and tent-pole events drive UK betting search. Each panel is one Google Trends request (up to five terms on one scale): compare shapes and timing, not levels across panels.');
+  set('evDailyTitle', gm?'Gaming demand, last 90 days (daily)':'Sport drivers, last 90 days (daily)');
+  set('impactTitle', gm?'What big sporting events do to gaming demand':'Fixture impact');
+  set('impactNote', `Average index in the event week(s) against the median of the six weeks before. ${gm?'Shows whether major sporting weeks lift or pull down gaming search (cross-sell timing).':'Which fixtures move UK betting search, and for whom.'}`);
+  set('wkFixTitle', gm?'TV and key dates that week':'Fixtures that week');
+  set('fcNextTitle', gm?'Next TV and major events':'Next major fixtures');
+  set('brLede', `${ourNames} against UK competitors. Branded search interest only.`);
+  set('brNote', `Week and month columns: each brand against its own past (daily, same weekdays last year). Share columns: all brands on one scale through ${title(VC.anchor)}, last 4 complete weeks.`);
+  set('brDailyTitle', gm?'Last 90 days, daily: gaming brands':'Last 90 days, daily: our brands vs bet365');
+  set('searchLede', `What UK searchers are typing around ${VC.noun} (last 90 days), and how each search term is trending year on year.`);
+  document.getElementById('calFootCard').style.display = gm?'none':'';
+}
+
+function weekRows(s){
+  return [...CAT_TERMS, ...BRAND_TERMS].map(t=>{ const D=DD[t]; const st=weekStats(D,s); const now=new Date(REF.x(D.last));
+    const mo=monthStats(D, now.getUTCFullYear(), now.getUTCMonth(), D.last); return {t, brand:BRAND_TERMS.includes(t), ...st, mtd: mo&&mo.zeroShare<=0.1?mo.vsLY:NaN, sig:signal(st)}; });
+}
+function composite(rows){ const ok=rows.filter(r=>!r.brand && r.sig!=='insufficient'); return {vsLY:mean(ok.map(r=>r.vsLY)), vsPrev:mean(ok.map(r=>r.vsPrev)), vsPrev4:mean(ok.map(r=>r.vsPrev4)), mtd:mean(ok.map(r=>r.mtd)), n:ok.length}; }
+const SIG = {above:'<span class="sig above">▲ Above normal</span>', below:'<span class="sig below">▼ Below normal</span>', normal:'<span class="sig">Normal</span>', insufficient:'<span class="sig">Insufficient signal</span>'};
+
+function moveTable(el, rows, withMtd=true, catLabel){
+  const row = r=>`<tr class="${OURS.includes(r.t)?'ours':''}"><td>${OURS.includes(r.t)?`<span class="dot" style="background:${OUR_COL[r.t]}"></span>`:''}${esc(r.brand?title(r.t):r.t)}</td>
+    ${r.sig==='insufficient' ? `<td class="num">${isFinite(r.cur)?r.cur.toFixed(1):'–'}</td><td class="num muted" colspan="${withMtd?5:4}" style="text-align:center">too sparse to compare</td>` :
+    `<td class="num">${r.cur.toFixed(1)}</td><td class="num">${chip(r.vsPrev)}</td><td class="num">${chip(r.vsPrev4)}</td><td class="num">${chip(r.vsLY)}</td><td class="num">${chip(r.vsLY2)}</td>${withMtd?`<td class="num">${chip(r.mtd)}</td>`:''}`}<td>${SIG[r.sig]}</td></tr>`;
+  const cats=rows.filter(r=>!r.brand), brs=rows.filter(r=>r.brand);
+  document.getElementById(el).innerHTML = `<thead><tr><th>Term</th><th class="num">Week avg</th><th class="num">vs prev week</th><th class="num">vs prev-4 avg</th><th class="num">vs same week LY</th><th class="num">vs 2 yrs ago</th>${withMtd?'<th class="num">MTD vs LY</th>':''}<th>Demand signal</th></tr></thead><tbody>`+
+    (cats.length?`<tr class="grp"><td colspan="8">${esc(catLabel||title(VC.noun)+' search terms')}</td></tr>`+cats.map(row).join(''):'')+
+    (brs.length?`<tr class="grp"><td colspan="8">Brands</td></tr>`+brs.map(row).join(''):'')+'</tbody>';
+}
+function fixList(evs, empty='None listed'){
+  return evs.length? '<ul class="evlist">'+evs.map(e=>`<li><span class="d">${fmtD(Date.parse(e.start))}${e.end?' – '+fmtD(Date.parse(e.end)):''}</span><span class="n">${e.tier===1?'<b>'+esc(e.name)+'</b>':esc(e.name)}${e.approx?' <span class="pill">dates approx.</span>':''}</span></li>`).join('')+'</ul>' : `<p class="note">${empty}</p>`;
+}
+
+/* ======================= 01 OVERVIEW ======================= */
+function renderOverview(){
+  if(LASTW===undefined || !CAT_TERMS.length){ document.getElementById('ovTiles').innerHTML='<div class="card empty">No year-on-year daily data yet for this dashboard. Run a refresh.</div>'; return; }
+  const gm = V==='gaming';
+  const s=LASTW, a=REF.x(s), w=isoWeek(a);
+  const rows=weekRows(s), C=composite(rows);
+  const now=new Date(REF.x(REF.last));
+  document.getElementById('ovLede').innerHTML = `Last completed week <b>Wk ${w.w} ${w.y} (${fmtD(a)} – ${fmtDY(a+6*DAY)})</b> against the previous week, the previous four weeks and the same weekdays last year. Month to date: <b>1–${now.getUTCDate()} ${fmtD(now,{month:'short'})}</b>. United Kingdom.`;
+  const ours = rows.filter(r=>OURS.includes(r.t)); const oursOK = ours.filter(r=>r.sig!=='insufficient'); const oursLY = mean(oursOK.map(r=>r.vsLY));
+  const nextEv = FX.filter(e=>Date.parse(e.start)>NOW && e.tier===1 && sportEv(e)).sort((x,y)=>Date.parse(x.start)-Date.parse(y.start))[0];
+  const wkAhead = eventsAt(a+7*DAY, a+14*DAY-1).filter(sportEv);
+  const lw = eventsAt(a, a+WEEK-1).filter(sportEv);
+  const msLast = matchesIn(a, a+WEEK-1), msNext = matchesIn(a+WEEK, a+2*WEEK-1);
+  const plLast = msLast.filter(m=>m.code==='eng.1').length, plNext = msNext.filter(m=>m.code==='eng.1').length;
+  const tvLast = eventsAt(a, a+WEEK-1).filter(e=>e.type==='tv'), tvNext = eventsAt(a+WEEK, a+2*WEEK-1).filter(e=>e.type==='tv');
+  const nextTv = FX.filter(e=>e.type==='tv' && Date.parse(e.start)>NOW).sort((x,y)=>Date.parse(x.start)-Date.parse(y.start))[0];
+  const cut = n => n.replace(/ \(.*\)/,'');
+  const lastLine = gm ? `On TV: ${tvLast.map(e=>cut(e.name)).join(', ')||'nothing listed'}${lw.filter(e=>e.tier===1).length?'; sport: '+lw.filter(e=>e.tier===1).map(e=>e.name).join(', '):''}`
+                      : `${msLast.length} football matches (${leagueSummary(msLast)||'none'})${lw.length?'; '+lw.map(e=>e.name).join(', '):''}`;
+  const nextLine = gm ? `On TV: ${tvNext.map(e=>cut(e.name)).join(', ')||'nothing listed'}${wkAhead.filter(e=>e.tier===1).length?'; sport: '+wkAhead.filter(e=>e.tier===1).map(e=>e.name).join(', '):''}`
+                      : `${msNext.length} football matches (${leagueSummary(msNext)||'none'})${wkAhead.length?'; '+wkAhead.map(e=>e.name).join(', '):''}`;
+  const pc = FP? popStats(a):null, pl_ = FP? popStats(a-YEAR):null; const popYoY = pc&&pl_&&pl_.n? pct(pc.tot,pl_.tot):NaN;
+  const popNote = (!gm && isFinite(popYoY)) ? `Fixture popularity last week scored ${pc.tot.toFixed(1)} against ${pl_.tot.toFixed(1)} in the same week last year (${sgnPlain(popYoY)})${Math.abs(popYoY)<10&&C.vsLY<-10?', so the fixture list does not explain the fall in search':popYoY<=-10&&C.vsLY<0?', so a weaker fixture list explains part of the fall in search':popYoY>=10&&C.vsLY<0?', so search fell despite a stronger fixture list':''}` : '';
+  const dShare = ourShare-ourShareLY;
+  const shareRows = VC.segments
+    ? Object.keys(VC.segments).map(seg=>{ const n=segShare(seg,0), l=segShare(seg,52); return n?`<div><span>Ours within ${esc(seg)}</span><span>${n.ours.toFixed(1)}% <span class="muted">(${(n.ours-l.ours>0?'+':'')+(n.ours-l.ours).toFixed(1)})</span></span></div>`:''; }).join('')
+    : OURS.map(b=>`<div><span>${esc(title(b))}</span><span>${(SH_NOW[b]||0).toFixed(1)}%</span></div>`).join('');
+  const tile4 = gm
+    ? `<div class="card tile"><div class="lab">TV &amp; entertainment</div><div class="big">${tvNext.length} <span style="font-size:14px;font-weight:500;color:var(--ink2)">shows on air this week</span></div><div class="sub">${tvNext.map(e=>esc(cut(e.name))).join(' · ')||'Nothing listed'}</div>
+      <div class="rows">${nextTv?`<div><span>Next: ${esc(cut(nextTv.name))}</span><span>${Math.ceil((Date.parse(nextTv.start)-NOW)/DAY)}d</span></div>`:''}${nextEv?`<div><span>Next major sport: ${esc(nextEv.name)}</span><span>${Math.ceil((Date.parse(nextEv.start)-NOW)/DAY)}d</span></div>`:''}</div></div>`
+    : `<div class="card tile"><div class="lab">Sporting week</div><div class="big">${msNext.length} <span style="font-size:14px;font-weight:500;color:var(--ink2)">matches this week</span></div><div class="sub">Premier League ${plNext} · Champions League ${msNext.filter(m=>m.code==='uefa.champions').length}${wkAhead.length?' · '+wkAhead.slice(0,2).map(e=>esc(e.name)).join(' · '):''}</div>
+      <div class="rows"><div><span>Last week</span><span>${msLast.length} matches (PL ${plLast})</span></div>${popNote?`<div><span>Fixture popularity, last week vs LY</span>${chip(popYoY)}</div>`:''}${nextEv?`<div><span>Next major: ${esc(nextEv.name)}</span><span>${Math.ceil((Date.parse(nextEv.start)-NOW)/DAY)}d</span></div>`:''}</div></div>`;
+  const tiles = [
+    `<div class="card tile"><div class="lab">UK ${esc(VC.noun)} search demand</div><div class="big ${cls(C.vsLY)}">${sgnPlain(C.vsLY)}</div><div class="sub">vs same week last year · average of ${C.n} ${esc(VC.noun)} search terms</div>
+      <div class="rows"><div><span>vs previous week</span>${chip(C.vsPrev)}</div><div><span>vs previous-4 average</span>${chip(C.vsPrev4)}</div><div><span>Month to date vs LY</span>${chip(C.mtd)}</div></div></div>`,
+    `<div class="card tile"><div class="lab">Our brands' search interest</div><div class="big ${cls(oursLY)}">${sgnPlain(oursLY)}</div><div class="sub">vs same week last year · average of ${oursOK.length} brand${oursOK.length===1?'':'s'}${oursOK.length<ours.length?' with enough signal':''}</div>
+      <div class="rows">${ours.map(r=>`<div><span><span class="dot" style="background:${OUR_COL[r.t]}"></span>${esc(title(r.t))}</span>${r.sig==='insufficient'?'<span class="muted">too sparse</span>':chip(r.vsLY)}</div>`).join('')}</div></div>`,
+    `<div class="card tile"><div class="lab">Our share of ${gm?'gaming ':''}brand search</div><div class="big">${ourShare.toFixed(1)}%</div><div class="sub">${OURS.length} Flutter brands, last 4 weeks, out of ${SHARE_POOL.length} brands tracked</div>
+      <div class="rows"><div><span>vs same weeks last year</span><span class="chip ${cls(dShare)}">${(dShare>0?'▲ +':'▼ ')+Math.abs(dShare).toFixed(1)} pts</span></div>${shareRows}</div></div>`,
+    tile4 ];
+  document.getElementById('ovTiles').innerHTML = tiles.join('');
+
+  /* bullets */
+  const gen = rows.filter(r=>!r.brand && r.sig!=='insufficient' && isFinite(r.vsLY));
+  const top = [...gen].sort((x,y)=>y.vsLY-x.vsLY)[0], bot=[...gen].sort((x,y)=>x.vsLY-y.vsLY)[0];
+  const comp = rows.filter(r=>r.brand && !OURS.includes(r.t) && r.sig!=='insufficient');
+  const b=[];
+  b.push(`UK ${esc(VC.noun)} search was <b>${sgnPlain(C.vsLY)}</b> on the same week last year and <b>${sgnPlain(C.vsPrev)}</b> on the week before. Last week: ${esc(lastLine)}.`);
+  if(popNote) b.push(popNote+`. <a href="${H('calendar')}">See fixtures →</a>`);
+  if(top&&bot) b.push(`Strongest term: “${esc(top.t)}” ${sgnPlain(top.vsLY)} YoY. Weakest: “${esc(bot.t)}” ${sgnPlain(bot.vsLY)} YoY.`);
+  b.push(`Our brands vs last year: ${oursOK.map(r=>`${esc(title(r.t))} ${sgnPlain(r.vsLY)}`).join(', ')||'not enough signal'}. Competitors: ${comp.map(r=>`${esc(title(r.t))} ${sgnPlain(r.vsLY)}`).join(', ')||'not enough signal'}.`);
+  b.push(`Share of ${gm?'gaming ':''}brand search: ours ${ourShare.toFixed(1)}% (${(dShare>0?'+':'')+dShare.toFixed(1)} pts YoY)${oursOK.length&&oursOK.every(r=>r.vsLY<0)&&dShare>0?', up because competitors are falling faster than we are':''}.`);
+  b.push(`This week: ${esc(nextLine)}.`);
+  try{ const {by}=gscDatasets(); const parts=[];
+    for(const k of Object.keys(by).filter(k=>k.endsWith('|dates'))){ const pr=k.split('|')[0], rws=by[k].data; if(!rws.length) continue;
+      if(!OURS.includes((SC.properties[pr]||{}).trends_brand)) continue;
+      const ws=REF.x(s), we=ws+6*DAY; if(rws[0].d>ws-364*DAY || rws[rws.length-1].d<we) continue;
+      const c=sumRange(rws,ws,we,'clicks'), cl=sumRange(rws,ws-364*DAY,we-364*DAY,'clicks'); const i=sumRange(rws,ws,we,'impr'), il=sumRange(rws,ws-364*DAY,we-364*DAY,'impr');
+      parts.push(`${esc((SC.properties[pr]||{label:pr}).label.replace(/ \(.*\)/,''))} clicks ${sgnPlain(pct(c,cl))}, impressions ${sgnPlain(pct(i,il))}`); }
+    if(parts.length) b.push(`Search Console, same week vs last year: ${parts.join('; ')}. <a href="${H('gsc')}">Compare with Trends →</a>`);
+  }catch(e){}
+  const R=T.related||{}; if((VC.related_terms||[]).some(t=>cleanRelated(R[t]&&R[t].rising).some(([q])=>/gamstop/i.test(q)))) b.push(`Watch: “not on GamStop” searches are rising (unlicensed-operator demand, a compliance signal).`);
+  document.getElementById('ovBullets').innerHTML = b.map(x=>`<li>${x}</li>`).join('');
+
+  /* chart: last 13 weeks daily, TY vs LY */
+  const D=DD[VC.headline_term]||DD[CAT_TERMS[0]]; const from=Math.max(0,D.last-90);
+  const ty=[],ly=[]; for(let i=from;i<=D.last;i++){ ty.push({x:D.x(i),y:D.ty[i]}); ly.push({x:D.x(i),y:D.ly[i]}); }
+  lineChart(document.getElementById('ovChart'), [{label:'This year',data:ty,borderColor:SER[0],backgroundColor:SER[0],tension:.15},{label:'Last year (same weekdays)',data:ly,borderColor:css('--comp'),backgroundColor:css('--comp'),borderWidth:1.6,tension:.15}], {daily:true,labels:false,tier:2});
+  legend('ovLegend',[['This year',SER[0]],['Last year, same weekdays',css('--comp')]]);
+
+  document.getElementById('ovCal').innerHTML = `<h3 style="font-size:12px;margin:4px 0">Last week · ${fmtD(a)} – ${fmtD(a+6*DAY)}</h3>${weekFixturesHTML(a)}<h3 style="font-size:12px;margin:14px 0 4px">This week · ${fmtD(a+7*DAY)} – ${fmtD(a+13*DAY)}</h3>${weekFixturesHTML(a+WEEK)}<p class="note" style="margin-top:10px"><a href="${H('calendar')}">Full calendar →</a>${gm?` · <a href="${H('tv')}">TV &amp; entertainment →</a>`:''}</p>`;
+  document.getElementById('ovTableNote').textContent = `Wk ${w.w}: ${fmtD(a)} – ${fmtDY(a+6*DAY)}. Each term against its own past, on one scale per term. Above/below normal = ±15% vs the same week last year.`;
+  moveTable('ovTable', rows);
+  OVERVIEW = {s, rows, C, ours:oursOK, comp, w, lastLine, nextLine, popNote};
+}
+
+/* ======================= 02 EVENT / CATEGORY ======================= */
+const evSel=document.getElementById('evGroup');
+function segVal(id){ return +document.querySelector(`#${id} button[aria-pressed="true"]`).dataset.v; }
+document.querySelectorAll('.seg').forEach(sg=>sg.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; sg.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b)); route(); }));
+function renderEvent(){
+  const gid=evSel.value, g=G[gid]; if(!g) return; const sm=segVal('evSmooth'), rg=segVal('evRange');
+  const ds=g.terms.map((t,i)=>{ let s=complete(groupSeries(G,gid,t)); if(rg) s=s.slice(-rg); return {label:t,data:smooth(s,sm),borderColor:SER[i],backgroundColor:SER[i]}; });
+  lineChart(document.getElementById('evChart'), ds, {tier:1});
+  legend('evLegend', g.terms.map((t,i)=>[t+(AMBIG.includes(t)?' (ambiguous)':''),SER[i]]));
+  const dg=VC.daily_group, d=G[dg];
+  document.getElementById('evDailyCard').style.display = d?'':'none';
+  if(d){ lineChart(document.getElementById('evDaily'), d.terms.map((t,i)=>({label:t,data:groupSeries(G,dg,t),borderColor:SER[i],backgroundColor:SER[i],tension:.2})), {daily:true,labels:false}); legend('evDailyLegend', d.terms.map((t,i)=>[t,SER[i]])); }
+  const cols=(VC.impact_terms||[]).filter(t=>TERMS[t]);
+  const bcols=OURS.slice(0,3).concat(VC.impact_brands||[]).filter(b=>BRANDS[b]);
+  const evs=FX.filter(e=>e.tier===1&&sportEv(e)&&Date.parse(e.end||e.start)<NOW-WEEK).sort((x,y)=>Date.parse(y.start)-Date.parse(x.start));
+  document.getElementById('impactTable').innerHTML=`<thead><tr><th>Event</th><th>Dates</th>${cols.map(t=>`<th class="num">${esc(t)}</th>`).join('')}${bcols.map(b=>`<th class="num">${esc(title(b))}</th>`).join('')}</tr></thead><tbody>`+
+    evs.map(ev=>`<tr><td>${esc(ev.name)}</td><td class="muted">${fmtDY(Date.parse(ev.start))}</td>${cols.map(t=>`<td class="num">${chip(eventUplift(groupSeries(G,TERMS[t].gid,t),ev))}</td>`).join('')}${bcols.map(b=>`<td class="num">${chip(eventUplift(BRANDS[b],ev))}</td>`).join('')}</tr>`).join('')+'</tbody>';
+}
+evSel.onchange=()=>route();
+
+/* ======================= 03 WEEKLY ======================= */
+const wkWeek=document.getElementById('wkWeek'), wkTerm=document.getElementById('wkTerm');
+wkWeek.innerHTML=[...WEEKS].reverse().map(s=>`<option value="${s}">${weekLabel(s)}</option>`).join('');
+function renderWeekly(){
+  if(!WEEKS.length || !wkTerm.value) return;
+  const s=+wkWeek.value, t=wkTerm.value, D=DD[t], a=REF.x(s);
+  const days=[0,1,2,3,4,5,6].map(k=>fmtD(a+k*DAY,{weekday:'short',day:'numeric'}));
+  const pick=(arr,o)=>[0,1,2,3,4,5,6].map(k=>{ const i=s+k+o; return i>=0?arr[i]:null; });
+  barChart(document.getElementById('wkChart'), days, [
+    {label:'Selected week',data:pick(D.ty,0),backgroundColor:SER[0],borderRadius:3},
+    {label:'Previous week',data:pick(D.ty,-7),backgroundColor:SER[0]+'66',borderRadius:3},
+    {label:'Same week last year',data:pick(D.ly,0),backgroundColor:css('--comp'),borderRadius:3}]);
+  const st=weekStats(D,s);
+  document.getElementById('wkChartTitle').innerHTML=`${esc(BRAND_TERMS.includes(t)?title(t):'“'+t+'”')}: ${weekLabel(s)} &nbsp; ${chip(st.vsPrev)} vs prev week &nbsp; ${chip(st.vsLY)} vs LY`;
+  legend('wkLegend',[['Selected week',SER[0]],['Previous week',SER[0],true],['Same week last year',css('--comp')]]);
+  document.getElementById('wkFix').innerHTML=weekFixturesHTML(a);
+  moveTable('wkTable', weekRows(s), false);
+}
+wkWeek.onchange=wkTerm.onchange=()=>route();
+
+/* ======================= 04 MONTHLY ======================= */
+const moMonth=document.getElementById('moMonth'), moTerm=document.getElementById('moTerm');
+(function(){ if(!REF) return; const opts=[]; const seen=new Set();
+  for(let i=REF.last;i>=0;i--){ const d=new Date(REF.x(i)); const k=d.getUTCFullYear()+'-'+d.getUTCMonth(); if(seen.has(k)) continue; seen.add(k);
+    if(monthStats(REF,d.getUTCFullYear(),d.getUTCMonth())) opts.push([k, (i===REF.last && new Date(REF.x(REF.last)+DAY).getUTCMonth()===d.getUTCMonth()? 'Month to date: ':'')+fmtD(d,{month:'long',year:'numeric'})]); }
+  moMonth.innerHTML=opts.map(([k,l])=>`<option value="${k}">${esc(l)}</option>`).join('');
+})();
+function renderMonthly(){
+  if(!moMonth.value) return;
+  const [y,m]=moMonth.value.split('-').map(Number);
+  const rows=[...CAT_TERMS,...BRAND_TERMS].map(t=>{ const D=DD[t]; const st=monthStats(D,y,m,D.last); return st?{t,brand:BRAND_TERMS.includes(t),...st}:null; }).filter(Boolean);
+  const any=rows[0]; const lab = any? `${fmtD(REF.x(any.a))} – ${fmtDY(REF.x(any.b))}` : '';
+  document.getElementById('moChartTitle').textContent=`% change vs same weekdays last year · ${lab}`;
+  const ok=rows.filter(r=>r.zeroShare<=0.1 && (r.cur>=3||r.ly>=3)).sort((p,q)=>q.vsLY-p.vsLY);
+  barChart(document.getElementById('moChart'), ok.map(r=>r.brand?title(r.t):r.t), [{label:'vs last year',data:ok.map(r=>r.vsLY),backgroundColor:ok.map(r=>OURS.includes(r.t)?OUR_COL[r.t]:r.vsLY>=0?'#4caf50':'#e05a5a'),borderRadius:3}], {horizontal:true,pct:true});
+  document.getElementById('moTable').innerHTML=`<thead><tr><th>Term</th><th class="num">Current avg</th><th class="num">LY avg</th><th class="num">vs LY</th><th class="num">vs 2 yrs ago</th></tr></thead><tbody>`+
+    rows.map(r=>`<tr class="${OURS.includes(r.t)?'ours':''}"><td>${esc(r.brand?title(r.t):r.t)}${r.zeroShare>0.1||r.cur<3?' <span class="pill">insufficient signal</span>':''}</td><td class="num">${r.cur.toFixed(1)}</td><td class="num">${r.ly.toFixed(1)}</td><td class="num">${chip(r.vsLY)}</td><td class="num">${chip(r.vsLY2)}</td></tr>`).join('')+'</tbody>';
+  const ws=weeklySeries(moTerm.value); if(!ws) return;
+  const s=complete(ws); const byM=new Map();
+  for(const p of s){ const d=new Date(p.x+3*DAY); const k=Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),1); (byM.get(k)||byM.set(k,[]).get(k)).push(p.y); }
+  const ks=[...byM.keys()].sort((a,b)=>a-b); const last24=ks.slice(-24);
+  const labels=last24.map(k=>fmtD(k,{month:'short',year:'2-digit'}));
+  const cur=last24.map(k=>mean(byM.get(k))); const prev=last24.map(k=>{ const d=new Date(k); const kk=Date.UTC(d.getUTCFullYear()-1,d.getUTCMonth(),1); return byM.has(kk)?mean(byM.get(kk)):null; });
+  barChart(document.getElementById('moLong'), labels, [{label:'Month average',data:cur,backgroundColor:SER[0],borderRadius:3},{label:'Same month a year earlier',data:prev,backgroundColor:css('--comp'),borderRadius:3}]);
+  legend('moLongLegend',[['Month average (weekly data)',SER[0]],['Same month a year earlier',css('--comp')]]);
+}
+moMonth.onchange=moTerm.onchange=()=>route();
+
+/* ======================= 05 OUTLOOK ======================= */
+const fcSel=document.getElementById('fcTerm');
+function renderOutlook(){
+  const s=weeklySeries(fcSel.value); if(!s) return; const c=complete(s), f=forecast(s), hist=c.slice(-78);
+  if(!f){ document.getElementById('fcAcc').textContent='Not enough history.'; return; }
+  const j=hist[hist.length-1]; const pts=[{x:j.x,y:j.y,lo:j.y,hi:j.y},...f.points];
+  const lyOf=p=>{ const q=c.find(q=>Math.abs(q.x-(p.x-52*WEEK))<2*DAY); return q?{x:p.x,y:q.y}:null; };
+  lineChart(document.getElementById('fcChart'),[
+    {label:'hi',data:pts.map(p=>({x:p.x,y:p.hi})),borderColor:'transparent',backgroundColor:css('--band'),fill:'+1',pointRadius:0,hideTip:true},
+    {label:'lo',data:pts.map(p=>({x:p.x,y:p.lo})),borderColor:'transparent',pointRadius:0,fill:false,hideTip:true},
+    {label:'Actual',data:hist,borderColor:SER[0],backgroundColor:SER[0]},
+    {label:'Forecast',data:pts,borderColor:SER[1],backgroundColor:SER[1],borderDash:[6,4]},
+    {label:'Same week last year',data:hist.concat(f.points).map(lyOf).filter(Boolean),borderColor:css('--comp'),backgroundColor:css('--comp'),borderWidth:1.5}],{today:true,regulation:true});
+  legend('fcLegend',[['Actual (weekly)',SER[0]],['Forecast',SER[1]],['Same week last year',css('--comp')],['Range implied by the two prior years',SER[0],true]]);
+  const bt=backtest(s);
+  document.getElementById('fcAcc').textContent=`Trend factor ×${f.trend.toFixed(2)}`+(isFinite(bt)?` · back-test: a forecast made 26 weeks ago was ${bt.toFixed(0)}% off the actual 26-week total`:'');
+  const base=mean(c.slice(-4).map(q=>q.y));
+  document.getElementById('peakTable').innerHTML=`<thead><tr><th>Week commencing</th><th class="num">Forecast</th><th class="num">vs last 4 wks</th><th>${V==='gaming'?'TV and events':'Fixtures'}</th></tr></thead><tbody>`+
+    [...f.points].sort((p,q)=>q.y-p.y).slice(0,8).map(p=>`<tr><td>${fmtDY(p.x)}</td><td class="num">${p.y.toFixed(1)}</td><td class="num">${chip(pct(p.y,base))}</td><td>${eventsAt(p.x,p.x+WEEK-1).filter(vEv).map(e=>esc(e.name)).join('<br>')||'<span class="muted">–</span>'}</td></tr>`).join('')+'</tbody>';
+  document.getElementById('nextEvents').innerHTML=FX.filter(e=>Date.parse(e.start)>NOW&&vEv(e)&&(V!=='gaming'||e.type==='tv'||e.tier===1)).sort((x,y)=>Date.parse(x.start)-Date.parse(y.start)).slice(0,10)
+    .map(e=>`<li><span class="d">${fmtDY(Date.parse(e.start))}</span><span class="n">${e.tier===1?'<b>'+esc(e.name)+'</b>':esc(e.name)}${e.approx?' <span class="pill">approx.</span>':''}</span><span class="muted">${Math.ceil((Date.parse(e.start)-NOW)/DAY)}d</span></li>`).join('');
+}
+fcSel.onchange=()=>route();
+
+/* ======================= 06 CALENDAR ======================= */
+const calType=document.getElementById('calType');
+function renderCalendar(){
+  renderPopularity();
+  const ty=calType.value; const F=FX.filter(e=>!ty||e.type===ty);
+  const li=e=>{ const s=Date.parse(e.start), en=Date.parse(e.end||e.start)+DAY; const live=s<=NOW&&en>NOW; const d=Math.ceil((s-NOW)/DAY);
+    return `<li><span class="d">${fmtD(s)}${e.end?' – '+fmtD(Date.parse(e.end)):''}</span><span class="n">${e.tier===1?'<b>'+esc(e.name)+'</b>':esc(e.name)} <span class="pill">${esc(e.type)}</span>${e.approx?' <span class="pill">dates approx.</span>':''}</span><span class="muted">${live?'<b>on now</b>':d>0?'in '+d+'d':''}</span></li>`; };
+  const MTY=MATCHES.filter(m=>m.x>NOW-130*DAY);
+  if(MTY.length && V!=='gaming'){ const m0=Math.min(...MTY.map(m=>m.x)), m1=Math.max(...MTY.map(m=>m.x));
+    let w0=Date.UTC(new Date(m0).getUTCFullYear(),new Date(m0).getUTCMonth(),new Date(m0).getUTCDate()); while(new Date(w0).getUTCDay()!==1) w0+=DAY;
+    const wks=[]; for(let w=w0; w<=m1; w+=WEEK) wks.push(w);
+    const codes=Object.keys(LEAGUE); const thisW=wks.findIndex(w=>NOW>=w&&NOW<w+WEEK);
+    const ch=barChart(document.getElementById('calChart'), wks.map(w=>fmtD(w)), codes.map((c,i)=>({label:LEAGUE[c],data:wks.map(w=>matchesIn(w,w+WEEK-1).filter(m=>m.code===c).length),backgroundColor:SER[i%SER.length],stack:'s'})));
+    ch.options.scales.x.stacked=true; ch.options.scales.y.stacked=true; ch.update();
+    legend('calLegend', codes.map((c,i)=>[LEAGUE[c],SER[i%SER.length]]));
+    document.getElementById('calNote').textContent=`ESPN public scoreboard, ${MTY.length} matches from ${fmtDY(m0)} to ${fmtDY(m1)}. Week of ${fmtD(wks[Math.max(0,thisW)])} is the current week.`; }
+  document.getElementById('calUp').innerHTML=F.filter(e=>Date.parse(e.end||e.start)+DAY>NOW).sort((a,b)=>Date.parse(a.start)-Date.parse(b.start)).map(li).join('');
+  document.getElementById('calPast').innerHTML=F.filter(e=>Date.parse(e.end||e.start)+DAY<=NOW&&Date.parse(e.start)>NOW-365*DAY).sort((a,b)=>Date.parse(b.start)-Date.parse(a.start)).map(li).join('');
+}
+calType.onchange=()=>route();
+
+
+/* ======================= fixture popularity ======================= */
+const FP = CFG.fixture_popularity || null;
+const UKSET = new Set(MATCHES.filter(m=>['eng.1','eng.2','sco.1'].includes(m.code)).flatMap(m=>[m.home,m.away]));
+if(FP) for(const m of MATCHES){ const r=matchScore(m,FP,UKSET); m.pop=r.score; m.why=r.reasons; }
+const YEAR = 364*DAY;
+function popStats(a){ /* a = Monday 00:00 UTC */
+  const ms=matchesIn(a,a+WEEK-1); const byComp={}, byDay=[0,1,2,3,4,5,6].map(()=>({})); let tot=0, wkend=0, mid=0;
+  for(const m of ms){ const d=Math.min(6,Math.floor((m.x-a)/DAY)); tot+=m.pop||0; byComp[m.code]=byComp[m.code]||{n:0,s:0}; byComp[m.code].n++; byComp[m.code].s+=m.pop||0; byDay[d][m.code]=(byDay[d][m.code]||0)+(m.pop||0); if(d>=4) wkend+=m.pop||0; else mid+=m.pop||0; }
+  return {a, n:ms.length, tot, wkend, mid, byComp, byDay, pl:(byComp['eng.1']||{n:0}).n, top:[...ms].sort((p,q)=>(q.pop||0)-(p.pop||0)).slice(0,8)};
+}
+const popWeekSel=document.getElementById('popWeek');
+const POP_WEEKS=(()=>{ if(!FP||!MATCHES.length) return []; let w=Date.UTC(new Date(NOW).getUTCFullYear(),new Date(NOW).getUTCMonth(),new Date(NOW).getUTCDate()); while(new Date(w).getUTCDay()!==1) w-=DAY; const out=[]; for(let k=-17;k<=8;k++) out.push(w+k*WEEK); return out.filter(a=>matchesIn(a,a+WEEK-1).length||matchesIn(a-YEAR,a-YEAR+WEEK-1).length); })();
+const POP_DEFAULT = (LASTW!==undefined && POP_WEEKS.includes(REF.x(LASTW))) ? REF.x(LASTW) : POP_WEEKS.filter(a=>a+WEEK<=NOW).pop();
+popWeekSel.innerHTML=[...POP_WEEKS].reverse().map(a=>{ const w=isoWeek(a); return `<option value="${a}" ${a===POP_DEFAULT?'selected':''}>Wk ${w.w} ${w.y} · ${fmtD(a)} – ${fmtD(a+6*DAY)}${a>NOW?' (upcoming)':a+WEEK>NOW?' (this week)':''}</option>`; }).join('');
+const popPill = m => `<b style="margin-left:auto;padding-left:10px;white-space:nowrap;font-variant-numeric:tabular-nums">${(m.pop||0).toFixed(2)}</b>`;
+function popList(list){ return list.length? '<ul class="evlist m">'+list.map(m=>`<li><span class="d">${fmtD(m.x,{weekday:'short',day:'numeric',month:'short'})}</span><span class="n">${esc(m.home)} ${m.score?'<b>'+esc(m.score)+'</b>':'v'} ${esc(m.away)}<br><span class="muted" style="font-size:11px">${esc(LEAGUE[m.code]||m.code)}${(m.why||[]).length?' · '+esc(m.why.join(' · ')):''}</span></span>${popPill(m)}</li>`).join('')+'</ul>' : '<p class="note">No fixtures in the feed for this week.</p>'; }
+function popLine(a){ if(!FP) return ''; const c=popStats(a), p=popStats(a-WEEK), l=popStats(a-YEAR); return `<p class="note" style="margin:2px 0 8px">Fixture popularity score <b>${c.tot.toFixed(1)}</b> · vs previous week ${chip(pct(c.tot,p.tot))} · vs same week last year ${l.n?chip(pct(c.tot,l.tot)):'–'}</p>`; }
+function renderPopularity(){
+  const wrap=document.getElementById('popWrap'); wrap.style.display=(FP&&POP_WEEKS.length&&V!=='gaming')?'':'none'; if(wrap.style.display==='none') return;
+  const a=+popWeekSel.value, c=popStats(a), p=popStats(a-WEEK), l=popStats(a-YEAR); const w=isoWeek(a), wl=isoWeek(a-YEAR);
+  const avg=s=>s.n?(s.tot/s.n).toFixed(2):'–';
+  document.getElementById('popTiles').innerHTML=[
+    `<div class="card tile"><div class="lab">Fixture popularity score · Wk ${w.w}</div><div class="big">${c.tot.toFixed(1)}</div><div class="sub">${fmtD(a)} – ${fmtDY(a+6*DAY)} · ${c.n} fixtures</div></div>`,
+    `<div class="card tile"><div class="lab">vs previous week</div><div class="big ${cls(pct(c.tot,p.tot))}">${sgnPlain(pct(c.tot,p.tot))}</div><div class="sub">${fmtD(a-WEEK)} – ${fmtD(a-DAY)}: ${p.tot.toFixed(1)}</div></div>`,
+    `<div class="card tile"><div class="lab">vs same week last year</div><div class="big ${cls(pct(c.tot,l.tot))}">${l.n?sgnPlain(pct(c.tot,l.tot)):'n/a'}</div><div class="sub">${fmtD(a-YEAR)} – ${fmtDY(a-YEAR+6*DAY)} (Wk ${wl.w}): ${l.tot.toFixed(1)}</div></div>`,
+    `<div class="card tile"><div class="lab">Fixtures · average score</div><div class="big">${c.n} · ${avg(c)}</div><div class="sub">prev week ${p.n} · ${avg(p)}; last year ${l.n} · ${avg(l)}</div><div class="rows"><div><span>Premier League fixtures</span><span>${c.pl} <span class="muted">(LY ${l.pl})</span></span></div></div></div>`].join('');
+  const codes=Object.keys(LEAGUE).filter(k=>c.byComp[k]);
+  const days=[0,1,2,3,4,5,6].map(k=>fmtD(a+k*DAY,{weekday:'short',day:'numeric',month:'short'}));
+  const ch=barChart(document.getElementById('popDay'), days, codes.map((k,i)=>({label:LEAGUE[k],data:c.byDay.map(d=>d[k]||0),backgroundColor:SER[i%SER.length],stack:'s'})));
+  ch.options.scales.x.stacked=true; ch.options.scales.y.stacked=true; ch.update();
+  legend('popDayLegend', codes.map((k,i)=>[LEAGUE[k],SER[i%SER.length]]));
+  document.getElementById('popDayTitle').textContent=`Popularity score by day and competition · ${fmtD(a)} – ${fmtDY(a+6*DAY)}`;
+  const r3=(lab,f,bold)=>`<tr><td>${bold?'<b>'+lab+'</b>':lab}</td><td class="num">${bold?'<b>'+f(c)+'</b>':f(c)}</td><td class="num">${f(p)}</td><td class="num">${f(l)}</td></tr>`;
+  document.getElementById('popSplit').innerHTML=`<thead><tr><th></th><th class="num">Selected</th><th class="num">Prev wk</th><th class="num">Last year</th></tr></thead><tbody>`+
+    r3('Midweek (Mon–Thu)',s=>s.mid.toFixed(1))+r3('Weekend (Fri–Sun)',s=>s.wkend.toFixed(1))+r3('Week',s=>s.tot.toFixed(1),true)+r3('Fixtures',s=>s.n)+r3('Premier League fixtures',s=>s.pl)+'</tbody>';
+  const allCodes=Object.keys(LEAGUE).filter(k=>c.byComp[k]||p.byComp[k]||l.byComp[k]).sort((x,y)=>((c.byComp[y]||{s:0}).s)-((c.byComp[x]||{s:0}).s));
+  const g=(s,k)=>s.byComp[k]||{n:0,s:0};
+  document.getElementById('popComp').innerHTML=`<thead><tr><th>Competition</th><th class="num">Fixtures</th><th class="num">Score</th><th class="num">Prev wk</th><th class="num">Last year</th></tr></thead><tbody>`+
+    allCodes.map(k=>`<tr><td>${esc(LEAGUE[k])}</td><td class="num">${g(c,k).n}</td><td class="num"><b>${g(c,k).s.toFixed(1)}</b></td><td class="num">${g(p,k).s.toFixed(1)}</td><td class="num">${g(l,k).s.toFixed(1)}</td></tr>`).join('')+'</tbody>';
+  const sel=POP_WEEKS.indexOf(a);
+  barChart(document.getElementById('popWeeks'), POP_WEEKS.map(x=>fmtD(x)), [
+    {label:'This season',data:POP_WEEKS.map(x=>popStats(x).tot),backgroundColor:POP_WEEKS.map((x,i)=>i===sel?css('--s2'):SER[0]),borderRadius:3},
+    {label:'Same week last season',data:POP_WEEKS.map(x=>popStats(x-YEAR).tot),backgroundColor:css('--comp'),borderRadius:3}]);
+  legend('popWeeksLegend',[['This season (weeks commencing)',SER[0]],['Selected week',css('--s2')],['Same week last season',css('--comp')]]);
+  document.getElementById('popTop').innerHTML=popList(c.top);
+  document.getElementById('popTopLY').innerHTML=popList(l.top.slice(0,5));
+  const tiers=Object.entries(FP.club_tiers).map(([n,t])=>`<b>${esc(n)}</b> (${t.score}): ${t.teams.map(esc).join(', ')}`).join('<br>');
+  document.getElementById('popHow').innerHTML=`<h3>How the score works</h3>
+    <p><b>Match score = competition weight × (0.5 + club A + club B) × ${FP.rivalry_multiplier} if it is a rivalry.</b> European ties with no UK club are multiplied by ${FP.no_uk_club_multiplier}. A week's score is the sum of its matches. Example: Liverpool v Manchester United in the Premier League = 1.0 × (0.5 + 1 + 1) × ${FP.rivalry_multiplier} = ${(2.5*FP.rivalry_multiplier).toFixed(2)}.</p>
+    <p><b>Competition weights:</b> ${Object.entries(FP.competition_weight).map(([k,v])=>`${esc(LEAGUE[k]||k)} ${v}`).join(' · ')}</p>
+    <p><b>Clubs:</b><br>${tiers}<br>Other UK clubs ${FP.default_uk_club}, other clubs ${FP.default_other}. Internationals count only when a home nation plays: ${Object.entries(FP.nations).map(([k,v])=>`${esc(k)} ${v}`).join(', ')}.</p>
+    <p><b>Rivalries:</b> ${FP.rivalries.map(r=>esc(r.join(' v '))).join(' · ')}</p>
+    <p>This is a judgement-based guide to how much UK interest a fixture list should draw, not a measured audience and not Google Trends demand. It does not know kick-off slots, title or relegation stakes, or cup rounds. All weights and lists are in <code>config.json</code> under <code>fixture_popularity</code>.</p>`;
+}
+popWeekSel.onchange=()=>route();
+
+/* ======================= 07 BRAND ======================= */
+const brHi=document.getElementById('brHi');
+function renderBrand(){
+  const s=LASTW; const now=REF?new Date(REF.x(REF.last)):null; const hasSeg=!!VC.segments;
+  const all=[...new Set([...OURS, ...BRAND_TERMS, ...Object.keys(BRANDS)])];
+  if(s!==undefined) document.getElementById('brTableTitle').textContent=`Brand scorecard · ${weekLabel(s)}`;
+  document.getElementById('brTable').innerHTML=`<thead><tr><th>Brand</th>${hasSeg?'<th>Segment</th>':''}<th class="num">vs prev week</th><th class="num">vs same week LY</th><th class="num">MTD vs LY</th><th class="num">Share (4 wks)</th><th class="num">Share change</th><th class="num">13-wk momentum</th></tr></thead><tbody>`+
+    all.map(b=>{ const D=aligned(b)?DD[b]:null; const st=D&&s!==undefined?weekStats(D,s):null; const sparse=st&&signal(st)==='insufficient'; const mo=D&&now?monthStats(D,now.getUTCFullYear(),now.getUTCMonth(),D.last):null;
+      const shc=isFinite(SH_NOW[b])?SH_NOW[b]-SH_LY[b]:NaN; const ours=OURS.includes(b);
+      return `<tr class="${ours?'ours':''}"><td><span class="dot" style="background:${ours?OUR_COL[b]:css('--comp')}"></span>${esc(title(b))} <span class="muted">${esc((CFG.brand_domains||{})[b]||'')}</span>${AMBIG.includes(b)?' <span class="pill">ambiguous</span>':''}</td>${hasSeg?`<td class="muted">${esc(segOf(b))}</td>`:''}
+      ${sparse?'<td class="num muted" colspan="3" style="text-align:center">too sparse to compare</td>':`<td class="num">${st?chip(st.vsPrev):'–'}</td><td class="num">${st?chip(st.vsLY):'–'}</td><td class="num">${mo&&mo.zeroShare<=0.1?chip(mo.vsLY):'–'}</td>`}
+      <td class="num">${isFinite(SH_NOW[b])?SH_NOW[b].toFixed(1)+'%':'–'}</td><td class="num">${isFinite(shc)?`<span class="chip ${cls(shc)}">${(shc>0?'+':'')+shc.toFixed(1)} pts</span>`:'–'}</td><td class="num">${BRANDS[b]?chip(momentum(BRANDS[b])):'–'}</td></tr>`; }).join('')+'</tbody>';
+  const segBox=document.getElementById('brSeg');
+  segBox.style.display=hasSeg?'':'none';
+  if(hasSeg){ segBox.innerHTML=`<h3>Our share within each segment</h3><p class="note">Share of search among the brands tracked in that segment, last 4 weeks vs the same weeks last year.</p><table><thead><tr><th>Segment</th><th class="num">Brands</th><th class="num">Our share</th><th class="num">Last year</th><th class="num">Change</th><th>Segment leader</th></tr></thead><tbody>`+
+    Object.keys(VC.segments).map(seg=>{ const n=segShare(seg,0), l=segShare(seg,52); if(!n) return ''; const d=n.ours-l.ours; return `<tr><td>${esc(seg.charAt(0).toUpperCase()+seg.slice(1))}</td><td class="num">${n.n}</td><td class="num"><b>${n.ours.toFixed(1)}%</b></td><td class="num">${l.ours.toFixed(1)}%</td><td class="num"><span class="chip ${cls(d)}">${(d>0?'+':'')+d.toFixed(1)} pts</span></td><td>${esc(title(n.top))} <span class="muted">${n.topShare.toFixed(1)}%</span></td></tr>`; }).join('')+'</tbody></table>'; }
+  const hi=brHi.value, rg=segVal('brRange');
+  const order=[...COMPS.filter(b=>b!==hi),...(hi?[hi]:[]),...OURS];
+  lineChart(document.getElementById('brChart'), order.filter(b=>BRANDS[b]).map(b=>{ let x=complete(BRANDS[b]); if(rg) x=x.slice(-rg); const ours=OURS.includes(b); const col=ours?OUR_COL[b]:b===hi?css('--ink2'):css('--comp');
+    return {label:title(b),data:smooth(x,4),borderColor:col,backgroundColor:col,borderWidth:ours?2.3:b===hi?2:1.1}; }), {tier:1});
+  legend('brLegend',[...OURS.map(b=>[title(b),OUR_COL[b]]),...(hi?[[title(hi),css('--ink2')]]:[]),['Other competitors',css('--comp')]]);
+  const ranked=[...SHARE_POOL].sort((a,b)=>SH_NOW[b]-SH_NOW[a]); const col=b=>OURS.includes(b)?OUR_COL[b]:'#9e9c94';
+  const excl=Object.keys(BRANDS).filter(b=>AMBIG.includes(b));
+  document.getElementById('brShareNote').textContent=`Last 4 weeks (solid) vs same weeks last year (faded).${excl.length?' Excluded as ambiguous: '+excl.map(title).join(', ')+'.':''}`;
+  barChart(document.getElementById('brShare'), ranked.map(title), [{label:'Last 4 weeks',data:ranked.map(b=>SH_NOW[b]),backgroundColor:ranked.map(col),borderRadius:3},{label:'Same weeks LY',data:ranked.map(b=>SH_LY[b]),backgroundColor:ranked.map(b=>col(b)+'55'),borderRadius:3}],{horizontal:true,pct:true});
+  const dg=VC.daily_brand_group, g=G[dg];
+  document.getElementById('brDailyCard').style.display=g?'':'none';
+  if(g){ const terms=g.terms.filter(t=>t!=='betting'); const c=t=>OURS.includes(t)?OUR_COL[t]:css('--ink2');
+    lineChart(document.getElementById('brDaily'), terms.map(t=>({label:title(t),data:groupSeries(G,dg,t),borderColor:c(t),backgroundColor:c(t),tension:.2,borderWidth:OURS.includes(t)?2.2:1.6})), {daily:true,labels:false});
+    legend('brDailyLegend', terms.map(t=>[title(t),c(t)])); }
+}
+brHi.onchange=()=>route();
+
+/* ======================= 08 TV & ENTERTAINMENT ======================= */
+const TV_PANELS = panelsOf('tv');
+const TV_SHOWS = (TVC.yoy_terms||[]).filter(aligned);
+const tvGroup=document.getElementById('tvGroup'), tvShow=document.getElementById('tvShow');
+tvGroup.innerHTML=TV_PANELS.map(([gid,g])=>`<option value="${gid}">${esc(g.label)}: ${esc(g.terms.join(', '))}</option>`).join('');
+tvShow.innerHTML=TV_SHOWS.map(t=>`<option value="${esc(t)}">${esc(title(t))}</option>`).join('');
+document.getElementById('socDate').value=new Date(NOW).toISOString().slice(0,10);
+const SOC_KEY='fuki-social-v1';
+let SOC_LOCAL=(()=>{ try{ return JSON.parse(localStorage.getItem(SOC_KEY)||'[]'); }catch(e){ return []; } })();
+const socSave=()=>{ try{ localStorage.setItem(SOC_KEY, JSON.stringify(SOC_LOCAL)); return true; }catch(e){ return false; } };
+const socAll=()=>[...(window.SOCIAL||[]).map(p=>({...p,src:'repo'})), ...SOC_LOCAL.map((p,i)=>({...p,src:'browser',i}))];
+const safeUrl=u=>/^https?:\/\//i.test(u||'')?u:'';
+function postEffect(p){ const D=DD[p.show]; if(!D||!aligned(p.show)) return null; const i=Math.round((Date.parse(p.date)-D.x(0))/DAY); if(!(i>=7 && i<=D.last)) return null;
+  const after=avgRange(D.ty,i,Math.min(D.last,i+2)), before=avgRange(D.ty,i-7,i-1); return {day:D.ty[i], chg:pct(after,before), ly:pct(D.ty[i],D.ly[i])}; }
+document.getElementById('socAdd').onclick=()=>{
+  const g=id=>document.getElementById(id).value.trim(); const msg=document.getElementById('socMsg');
+  const p={show:tvShow.value, platform:g('socPlatform'), date:g('socDate'), url:g('socUrl'), note:g('socNote')};
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(p.date)){ msg.textContent='Add the date the post went live.'; return; }
+  if(p.url && !safeUrl(p.url)){ msg.textContent='The link must start with https://'; return; }
+  if(!p.url && !p.note){ msg.textContent='Add a link or a note.'; return; }
+  SOC_LOCAL.push(p); msg.textContent = socSave()? 'Added. Saved in this browser.' : 'Added for this visit only (browser storage is unavailable here).';
+  document.getElementById('socUrl').value=''; document.getElementById('socNote').value=''; route();
+};
+window.__socRemove=i=>{ SOC_LOCAL.splice(i,1); socSave(); route(); };
+document.getElementById('socCopy').onclick=async e=>{ const b=e.currentTarget; const posts=socAll().map(({show,platform,date,url,note})=>({show,platform,date,url,note}));
+  try{ await navigator.clipboard.writeText(JSON.stringify({posts},null,1)); b.textContent='Copied'; }catch(_){ b.textContent='Copy blocked'; } setTimeout(()=>b.textContent='Copy all as JSON',1500); };
+function renderTV(){
+  const gid=tvGroup.value, g=G[gid], rg=segVal('tvRange');
+  if(g){ lineChart(document.getElementById('tvChart'), g.terms.map((t,i)=>{ let s=complete(groupSeries(G,gid,t)); if(rg) s=s.slice(-rg); return {label:title(t),data:smooth(s,rg?1:4),borderColor:SER[i],backgroundColor:SER[i]}; }), {tv:true,tier:1});
+    legend('tvLegend', g.terms.map((t,i)=>[title(t)+(AMBIG.includes(t)?' (ambiguous)':''),SER[i]])); }
+  const tvE=FX.filter(e=>e.type==='tv'); const li=e=>{ const s=Date.parse(e.start), en=Date.parse(e.end||e.start)+DAY; const live=s<=NOW&&en>NOW; const d=Math.ceil((s-NOW)/DAY);
+    return `<li><span class="d">${fmtD(s)}${e.end?' – '+fmtD(Date.parse(e.end)):''}</span><span class="n">${e.tier===1?'<b>'+esc(e.name)+'</b>':esc(e.name)}${e.approx?' <span class="pill">dates approx.</span>':''}</span><span class="muted">${live?'<b>on now</b>':d>0?'in '+d+'d':''}</span></li>`; };
+  document.getElementById('tvCal').innerHTML=tvE.filter(e=>Date.parse(e.end||e.start)+DAY>NOW).sort((a,b)=>Date.parse(a.start)-Date.parse(b.start)).map(li).join('')||'<li class="muted">Nothing listed</li>';
+  document.getElementById('tvCalPast').innerHTML=tvE.filter(e=>Date.parse(e.end||e.start)+DAY<=NOW&&Date.parse(e.start)>NOW-400*DAY).sort((a,b)=>Date.parse(b.start)-Date.parse(a.start)).map(li).join('');
+  if(LASTW!==undefined && TV_SHOWS.length){
+    const rows=TV_SHOWS.map(t=>{ const st=weekStats(DD[t],LASTW); return {t,brand:false,...st,sig:signal(st)}; });
+    moveTable('tvTable', rows.map(r=>({...r,t:title(r.t)})), false, `Shows · ${weekLabel(LASTW)}`); }
+  /* one show, daily, with social posts marked */
+  const show=tvShow.value, D=DD[show]; const posts=socAll();
+  if(D){ const ty=[],ly=[]; for(let i=0;i<=D.last;i++){ ty.push({x:D.x(i),y:D.ty[i]}); ly.push({x:D.x(i),y:D.ly[i]}); }
+    const marks=posts.filter(p=>p.show===show && isFinite(Date.parse(p.date))).map(p=>({x:Date.parse(p.date),label:p.platform||'post'}));
+    lineChart(document.getElementById('tvShowChart'), [{label:'This year',data:ty,borderColor:SER[0],backgroundColor:SER[0],tension:.15},{label:'Last year (same weekdays)',data:ly,borderColor:css('--comp'),backgroundColor:css('--comp'),borderWidth:1.6,tension:.15}], {daily:true,tv:true,tier:2,labels:false,marks});
+    legend('tvShowLegend',[['This year',SER[0]],['Last year, same weekdays',css('--comp')],['Social post',css('--s2')]]);
+    document.getElementById('tvShowTitle').textContent=`${title(show)}: UK search interest, daily, with social posts marked`; }
+  document.getElementById('tvPosts').innerHTML = posts.length ? `<thead><tr><th>Date</th><th>Show</th><th>Platform</th><th>Post</th><th class="num">Index on the day</th><th class="num">Day vs same day LY</th><th class="num">3 days from post vs 7 days before</th><th></th></tr></thead><tbody>`+
+    [...posts].sort((a,b)=>Date.parse(b.date)-Date.parse(a.date)).map(p=>{ const ef=postEffect(p); const u=safeUrl(p.url);
+      return `<tr><td>${esc(p.date)}</td><td>${esc(title(p.show||''))}</td><td>${esc(p.platform||'')}</td><td>${u?`<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">Open post</a>`:''}${p.note?(u?' · ':'')+esc(p.note):''}</td><td class="num">${ef?ef.day:'–'}</td><td class="num">${ef?chip(ef.ly):'–'}</td><td class="num">${ef?chip(ef.chg):'<span class="muted">outside data window</span>'}</td><td>${p.src==='browser'?`<button class="btn" onclick="__socRemove(${p.i})">Remove</button>`:'<span class="muted">shared</span>'}</td></tr>`; }).join('')+'</tbody>'
+    : '<tbody><tr><td class="muted">No social posts logged yet. Add one above to see it marked on the chart.</td></tr></tbody>';
+}
+tvGroup.onchange=tvShow.onchange=()=>route();
+
+/* ======================= 09 SEARCH ======================= */
+function renderSearch(){
+  const R=T.related||{}; const box=document.getElementById('related'); box.innerHTML='';
+  for(const term of (VC.related_terms||[])){ const r=R[term]; if(!r) continue;
+    const rising=cleanRelated(r.rising), top=cleanRelated(r.top); const gam=rising.some(([q])=>/gamstop|gamestop/i.test(q));
+    box.insertAdjacentHTML('beforeend',`<div class="card"><h3>“${esc(term)}”${gam?' <span class="pill" style="border-color:var(--warnline);background:var(--warnbg)">⚠ non-GamStop rising</span>':''}</h3>
+      <p class="note" style="margin:6px 0 2px"><b>Rising</b></p><table><tbody>${rising.slice(0,8).map(([q,v])=>`<tr><td>${esc(q)}</td><td class="num">${esc(v)}</td></tr>`).join('')||'<tr><td class="muted">none</td></tr>'}</tbody></table>
+      <p class="note" style="margin:10px 0 2px"><b>Top</b></p><table><tbody>${top.slice(0,6).map(([q,v])=>`<tr><td>${esc(q)}</td><td class="num">${esc(v)}</td></tr>`).join('')}</tbody></table>
+      ${(r.geo||[]).length?`<p class="note" style="margin-top:10px">By nation (index): ${r.geo.map(([n,v])=>esc(n)+' '+v).join(' · ')}</p>`:''}</div>`); }
+  const rows=Object.entries(TERMS).map(([t,{gid,label}])=>{ const s=groupSeries(G,gid,t); const y=yoy(s); return {t,label,...y,mom:momentum(s)}; }).sort((a,b)=>(isFinite(b.chg)?b.chg:-1e9)-(isFinite(a.chg)?a.chg:-1e9));
+  document.getElementById('yoyTable').innerHTML=`<thead><tr><th>Search term</th><th>Panel</th><th class="num">Index, last 4 wks</th><th class="num">Same wks LY</th><th class="num">YoY</th><th class="num">13-wk momentum</th></tr></thead><tbody>`+
+    rows.map(r=>`<tr><td>${esc(r.t)}${AMBIG.includes(r.t)?' <span class="pill">ambiguous</span>':''}${r.now<5?' <span class="pill">low resolution</span>':''}</td><td class="muted">${esc(r.label)}</td><td class="num">${isFinite(r.now)?r.now.toFixed(1):'–'}</td><td class="num">${isFinite(r.ly)?r.ly.toFixed(1):'–'}</td><td class="num">${chip(r.chg)}</td><td class="num">${chip(r.mom)}</td></tr>`).join('')+'</tbody>';
+}
+
+
+/* ======================= 09 SEARCH CONSOLE ======================= */
+const SC = CFG.search_console || {properties:{skybet:{label:'Sky Bet (skybet.com)',trends_brand:'sky bet',brand_patterns:['sky bet','skybet']},paddypower:{label:'Paddy Power (paddypower.com)',trends_brand:'paddy power',brand_patterns:['paddy power','paddypower']},betfair:{label:'Betfair (betfair.com)',trends_brand:'betfair',brand_patterns:['betfair']},other:{label:'Other property',trends_brand:'',brand_patterns:[]}}};
+const GSC_KEY = 'ukbd-gsc-v1';
+const BRANDS_ALL = ALLB;
+function parseCSV(text){
+  const rows=[]; let row=[], f='', q=false;
+  text=text.replace(/^\uFEFF/,'');
+  for(let i=0;i<text.length;i++){ const c=text[i];
+    if(q){ if(c==='"'){ if(text[i+1]==='"'){ f+='"'; i++; } else q=false; } else f+=c; }
+    else if(c==='"') q=true; else if(c===','){ row.push(f); f=''; } else if(c==='\n'||c==='\r'){ if(c==='\r'&&text[i+1]==='\n') i++; row.push(f); rows.push(row); row=[]; f=''; } else f+=c; }
+  if(f!==''||row.length){ row.push(f); rows.push(row); }
+  return rows.filter(r=>r.some(x=>x.trim()!==''));
+}
+const num = v => { if(v===undefined) return NaN; const s=String(v).replace(/[,\s%]/g,''); return s===''?NaN:+s; };
+function parseDate(v){ v=String(v).trim(); let m=v.match(/^(\d{4})-(\d{2})-(\d{2})/); if(m) return Date.UTC(+m[1],+m[2]-1,+m[3]);
+  m=v.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/); if(m) return Date.UTC(+m[3],+m[2]-1,+m[1]); const t=Date.parse(v); return isNaN(t)?NaN:Date.UTC(new Date(t).getFullYear(),new Date(t).getMonth(),new Date(t).getDate()); }
+function interpretGSC(text, name){
+  const rows=parseCSV(text); if(rows.length<2) return {err:'empty file'};
+  const h=rows[0].map(x=>x.trim().toLowerCase()); const ci=k=>h.findIndex(x=>x.includes(k));
+  const iC=ci('click'), iI=ci('impression'), iT=h.findIndex(x=>x==='ctr'||x.includes('ctr')), iP=ci('position');
+  if(iC<0||iI<0) return {err:'no Clicks/Impressions columns (is this a Performance export?)'};
+  const first=h[0]; const body=rows.slice(1);
+  const rec=r=>({clicks:num(r[iC]), impr:num(r[iI]), ctr:iT>=0?num(r[iT]):NaN, pos:iP>=0?num(r[iP]):NaN});
+  if(first.includes('date')) return {kind:'dates', data:body.map(r=>({d:parseDate(r[0]),...rec(r)})).filter(r=>isFinite(r.d)).sort((a,b)=>a.d-b.d)};
+  if(first.includes('quer')) return {kind:'queries', data:body.map(r=>({k:r[0],...rec(r)}))};
+  if(first.includes('page')) return {kind:'pages', data:body.map(r=>({k:r[0],...rec(r)}))};
+  return {err:`“${rows[0][0]}” export not used (use Dates, Queries or Pages)`};
+}
+function loadLocal(){ try{ return JSON.parse(localStorage.getItem(GSC_KEY)||'[]'); }catch(e){ return []; } }
+function saveLocal(list){ try{ localStorage.setItem(GSC_KEY, JSON.stringify(list)); return true; }catch(e){ return false; } }
+let GSC_LOCAL = loadLocal();
+let GSC_MEM = []; /* fallback when storage is unavailable */
+function gscDatasets(){
+  const all=[];
+  for(const f of (window.GSC_FILES||[])){ const r=interpretGSC(f.text,f.name); all.push({property:f.property,name:f.name,src:'repo',...r}); }
+  for(const f of GSC_LOCAL.concat(GSC_MEM)){ const r=interpretGSC(f.text,f.name); all.push({property:f.property,name:f.name,src:'browser',added:f.added,...r}); }
+  /* newest wins per property + kind: browser uploads override repo files */
+  const by={}; for(const d of all){ if(d.err) continue; by[d.property+'|'+d.kind]=d; }
+  return {all, by};
+}
+const gscProp=document.getElementById('gscProp');
+gscProp.innerHTML=Object.entries(SC.properties).map(([k,v])=>`<option value="${k}">${esc(v.label)}</option>`).join('');
+function guessProp(name){ const n=name.toLowerCase(); for(const k of Object.keys(SC.properties)){ if(n.includes(k)) return k; } return gscProp.value; }
+async function addFiles(files){
+  const msgs=[]; let stored=true;
+  for(const file of files){ const text=await file.text(); const prop=guessProp(file.name); const r=interpretGSC(text,file.name);
+    if(r.err){ msgs.push(`${file.name}: ${r.err}`); continue; }
+    const entry={property:prop,name:file.name,text,added:new Date().toISOString()};
+    GSC_LOCAL=GSC_LOCAL.filter(x=>!(x.property===prop && interpretGSC(x.text,x.name).kind===r.kind));
+    GSC_LOCAL.push(entry);
+    if(!saveLocal(GSC_LOCAL)){ stored=false; GSC_LOCAL.pop(); GSC_MEM=GSC_MEM.filter(x=>!(x.property===prop && interpretGSC(x.text,x.name).kind===r.kind)); GSC_MEM.push(entry); }
+    msgs.push(`${file.name}: ${r.kind}, ${r.data.length} rows → ${SC.properties[prop].label}`); }
+  document.getElementById('gscMsg').innerHTML=msgs.map(esc).join('<br>')+(stored?'':'<br>Browser storage is unavailable here, so this upload lasts until the page is closed.');
+  route();
+}
+document.getElementById('gscFile').onchange=e=>{ addFiles([...e.target.files]); e.target.value=''; };
+const drop=document.getElementById('gscDrop');
+drop.addEventListener('dragover',e=>{ e.preventDefault(); drop.classList.add('over'); });
+drop.addEventListener('dragleave',()=>drop.classList.remove('over'));
+drop.addEventListener('drop',e=>{ e.preventDefault(); drop.classList.remove('over'); addFiles([...e.dataTransfer.files].filter(f=>/\.csv$/i.test(f.name))); });
+function removeLocal(prop,name){ GSC_LOCAL=GSC_LOCAL.filter(x=>!(x.property===prop&&x.name===name)); GSC_MEM=GSC_MEM.filter(x=>!(x.property===prop&&x.name===name)); saveLocal(GSC_LOCAL); route(); }
+window.__gscRemove=removeLocal;
+
+function sumRange(rows,a,b,key){ return rows.filter(r=>r.d>=a&&r.d<=b).reduce((s,r)=>s+(isFinite(r[key])?r[key]:0),0); }
+function gscWeekly(rows){ /* Sunday-start weeks to match Google Trends weekly data */
+  const m=new Map(); for(const r of rows){ const wd=new Date(r.d).getUTCDay(); const w=r.d-wd*DAY; const o=m.get(w)||{x:w,clicks:0,impr:0,n:0}; o.clicks+=r.clicks||0; o.impr+=r.impr||0; o.n++; m.set(w,o); }
+  return [...m.values()].filter(o=>o.n===7).sort((a,b)=>a.x-b.x);
+}
+function renderGSC(){
+  const {all,by}=gscDatasets();
+  document.getElementById('gscList').innerHTML = all.length ? all.map(d=>`<div class="ds"><span style="flex:1"><b>${esc((SC.properties[d.property]||{label:d.property}).label)}</b> · ${esc(d.name)} ${d.err?`<span class="sig below">${esc(d.err)}</span>`:`<span class="muted">${esc(d.kind)}, ${d.data.length} rows${d.kind==='dates'&&d.data.length?`, ${fmtDY(d.data[0].d)} – ${fmtDY(d.data[d.data.length-1].d)}`:''}</span>`}</span><span class="src">${d.src==='repo'?'Repo':'This browser'}</span>${d.src==='browser'?`<button class="btn" onclick="__gscRemove('${esc(d.property)}','${esc(d.name).replace(/'/g,"\\'")}')">Remove</button>`:''}</div>`).join('') : '<p class="note">Nothing loaded yet.</p>';
+  const props=[...new Set(Object.keys(by).map(k=>k.split('|')[0]))];
+  const body=document.getElementById('gscBody');
+  if(!props.length){ body.innerHTML=''; return; }
+  body.innerHTML = props.map(p=>`<div class="card secgap" id="gsc-${p}"></div>`).join('');
+  for(const p of props){
+    const meta=SC.properties[p]||{label:p,trends_brand:'',brand_patterns:[]}; const el=document.getElementById('gsc-'+p);
+    const D=by[p+'|dates'], Q=by[p+'|queries'], P=by[p+'|pages']; let html=`<h3 style="font-size:15px">${esc(meta.label)}</h3>`;
+    const tb=meta.trends_brand;
+    if(D && D.data.length){
+      const rows=D.data, last=rows[rows.length-1].d;
+      let we=last; while(new Date(we).getUTCDay()!==0) we-=DAY; const ws=we-6*DAY; /* last complete Mon-Sun week */
+      const W=(a,b,k)=>sumRange(rows,a,b,k), has=(a)=>rows[0].d<=a;
+      const cur={c:W(ws,we,'clicks'),i:W(ws,we,'impr')}, prev={c:W(ws-7*DAY,we-7*DAY,'clicks'),i:W(ws-7*DAY,we-7*DAY,'impr')};
+      const ly=has(ws-364*DAY)?{c:W(ws-364*DAY,we-364*DAY,'clicks'),i:W(ws-364*DAY,we-364*DAY,'impr')}:null;
+      const ms=Date.UTC(new Date(last).getUTCFullYear(),new Date(last).getUTCMonth(),1);
+      const mtd={c:W(ms,last,'clicks'),i:W(ms,last,'impr')}, mly=has(ms-364*DAY)?{c:W(ms-364*DAY,last-364*DAY,'clicks'),i:W(ms-364*DAY,last-364*DAY,'impr')}:null;
+      const ctr=cur.i?cur.c/cur.i*100:NaN, ctrLY=ly&&ly.i?ly.c/ly.i*100:NaN;
+      const wk=isoWeek(ws);
+      /* Trends comparison for the same Mon-Sun week (daily YoY data) */
+      let tr=null; if(tb && aligned(tb)){ const s=WEEKS.find(i=>REF.x(i)===ws); if(s!==undefined){ const st=weekStats(DD[tb],s); tr=st; } }
+      const fmtN=v=>isFinite(v)?Math.round(v).toLocaleString('en-GB'):'–';
+      html+=`<p class="note">Last complete week: Wk ${wk.w} (${fmtD(ws)} – ${fmtDY(we)}). Data to ${fmtDY(last)}.${ly?'':' Upload 13+ months of Dates.csv for year-on-year.'}</p>
+      <div class="tiles" style="margin:8px 0 12px">
+        <div class="card tile"><div class="lab">Clicks, last week</div><div class="big">${fmtN(cur.c)}</div><div class="rows"><div><span>vs previous week</span>${chip(pct(cur.c,prev.c))}</div><div><span>vs same week LY</span>${ly?chip(pct(cur.c,ly.c)):'–'}</div><div><span>MTD vs LY</span>${mly?chip(pct(mtd.c,mly.c)):'–'}</div></div></div>
+        <div class="card tile"><div class="lab">Impressions, last week</div><div class="big">${fmtN(cur.i)}</div><div class="rows"><div><span>vs previous week</span>${chip(pct(cur.i,prev.i))}</div><div><span>vs same week LY</span>${ly?chip(pct(cur.i,ly.i)):'–'}</div><div><span>MTD vs LY</span>${mly?chip(pct(mtd.i,mly.i)):'–'}</div></div></div>
+        <div class="card tile"><div class="lab">CTR, last week</div><div class="big">${isFinite(ctr)?ctr.toFixed(1)+'%':'–'}</div><div class="rows"><div><span>same week LY</span><span>${isFinite(ctrLY)?ctrLY.toFixed(1)+'%':'–'}</span></div></div></div>
+        <div class="card tile"><div class="lab">Google Trends “${esc(tb||'–')}”, same week</div><div class="big ${tr?cls(tr.vsLY):''}">${tr?sgnPlain(tr.vsLY):'–'}</div><div class="sub">vs same week last year (relative interest)</div><div class="rows"><div><span>vs previous week</span>${tr?chip(tr.vsPrev):'–'}</div></div></div>
+      </div>`;
+      if(tr && ly){ const gi=pct(cur.i,ly.i), gt=tr.vsLY; const gap=gi-gt;
+        html+=`<div class="warn" style="background:#eef4fd;border-color:#b9d3f3;color:#123a6b">Search Console impressions ${sgnPlain(gi)} vs Google Trends ${sgnPlain(gt)} year on year for the same week. ${Math.abs(gap)>10?`A ${Math.abs(gap).toFixed(0)}-point gap: Trends measures share of all UK searches, so it ${gap>0?'understates':'overstates'} the change in absolute demand when total search ${gap>0?'is growing':'is shrinking'}. Report absolute demand from Search Console and use Trends for timing and competitor comparison.`:'The two broadly agree.'}</div>`; }
+      html+=`<div class="grid g2e"><div><h3>Daily clicks${ly?' vs same weekdays last year':''}</h3><div class="chartbox short"><canvas id="gscDaily-${p}"></canvas></div><div class="legend" id="gscDailyL-${p}"></div></div>
+        <div><h3>Search Console vs Google Trends, weekly (indexed, average = 100)</h3><div class="chartbox short"><canvas id="gscIdx-${p}"></canvas></div><div class="legend" id="gscIdxL-${p}"></div></div></div>`;
+      el.innerHTML=html+'<div id="gscQ-'+p+'"></div>';
+      const from=Math.max(rows[0].d,last-119*DAY); const ty=rows.filter(r=>r.d>=from).map(r=>({x:r.d,y:r.clicks}));
+      const lyMap=new Map(rows.map(r=>[r.d,r.clicks])); const lyS=ty.map(p=>lyMap.has(p.x-364*DAY)?{x:p.x,y:lyMap.get(p.x-364*DAY)}:null).filter(Boolean);
+      lineChart(document.getElementById('gscDaily-'+p), [{label:'Clicks',data:ty,borderColor:SER[0],backgroundColor:SER[0],tension:.15}, ...(lyS.length?[{label:'Clicks, same weekdays LY',data:lyS,borderColor:css('--comp'),backgroundColor:css('--comp'),borderWidth:1.5,tension:.15}]:[])], {daily:true,labels:false});
+      legend('gscDailyL-'+p, [['Clicks',SER[0]], ...(lyS.length?[['Same weekdays last year',css('--comp')]]:[])]);
+      const wkG=gscWeekly(rows); const trS=tb&&ALLB[tb]?complete(ALLB[tb]):[]; const trMap=new Map(trS.map(q=>[q.x,q.y]));
+      const ov=wkG.filter(w=>trMap.has(w.x)); 
+      if(ov.length>=4){ const mc=mean(ov.map(w=>w.clicks)), mi=mean(ov.map(w=>w.impr)), mt=mean(ov.map(w=>trMap.get(w.x)));
+        lineChart(document.getElementById('gscIdx-'+p), [
+          {label:'GSC impressions',data:ov.map(w=>({x:w.x,y:w.impr/mi*100})),borderColor:SER[1],backgroundColor:SER[1]},
+          {label:'GSC clicks',data:ov.map(w=>({x:w.x,y:w.clicks/mc*100})),borderColor:SER[0],backgroundColor:SER[0]},
+          {label:'Google Trends “'+tb+'”',data:ov.map(w=>({x:w.x,y:trMap.get(w.x)/mt*100})),borderColor:css('--ink2'),backgroundColor:css('--ink2'),borderDash:[5,4]}], {labels:false,tier:1});
+        legend('gscIdxL-'+p, [['GSC impressions',SER[1]],['GSC clicks',SER[0]],['Google Trends (brand)',css('--ink2')]]);
+      } else document.getElementById('gscIdx-'+p).parentElement.innerHTML='<p class="note">Needs at least 4 complete weeks that overlap the Trends brand data.</p>';
+    } else el.innerHTML=html+'<p class="note">Add Dates.csv for weekly and year-on-year clicks and impressions.</p><div id="gscQ-'+p+'"></div>';
+    /* queries + pages */
+    let qp='';
+    if(Q){ const pat=(meta.brand_patterns||[]).map(x=>x.toLowerCase()); const isB=k=>pat.some(x=>String(k).toLowerCase().includes(x));
+      const b=Q.data.filter(r=>isB(r.k)), nb=Q.data.filter(r=>!isB(r.k)); const S=(a,k)=>a.reduce((s,r)=>s+(r[k]||0),0);
+      const tc=S(Q.data,'clicks'), ti=S(Q.data,'impr');
+      qp+=`<div class="grid g2e secgap"><div><h3>Branded vs non-branded queries</h3><p class="note">Branded = query contains ${pat.map(x=>'“'+esc(x)+'”').join(', ')||'(no patterns set)'}. Based on the rows in Queries.csv (Search Console exports the top 1,000).</p>
+        <table><thead><tr><th></th><th class="num">Clicks</th><th class="num">Share</th><th class="num">Impressions</th><th class="num">Share</th></tr></thead><tbody>
+        <tr><td>Branded</td><td class="num">${Math.round(S(b,'clicks')).toLocaleString('en-GB')}</td><td class="num">${tc?(S(b,'clicks')/tc*100).toFixed(1)+'%':'–'}</td><td class="num">${Math.round(S(b,'impr')).toLocaleString('en-GB')}</td><td class="num">${ti?(S(b,'impr')/ti*100).toFixed(1)+'%':'–'}</td></tr>
+        <tr><td>Non-branded</td><td class="num">${Math.round(S(nb,'clicks')).toLocaleString('en-GB')}</td><td class="num">${tc?(S(nb,'clicks')/tc*100).toFixed(1)+'%':'–'}</td><td class="num">${Math.round(S(nb,'impr')).toLocaleString('en-GB')}</td><td class="num">${ti?(S(nb,'impr')/ti*100).toFixed(1)+'%':'–'}</td></tr></tbody></table>
+        <h3 style="margin-top:14px">Top non-branded queries</h3><table><thead><tr><th>Query</th><th class="num">Clicks</th><th class="num">Impr.</th><th class="num">CTR</th><th class="num">Pos.</th></tr></thead><tbody>${[...nb].sort((x,y)=>y.clicks-x.clicks).slice(0,15).map(r=>`<tr><td>${esc(r.k)}</td><td class="num">${Math.round(r.clicks).toLocaleString('en-GB')}</td><td class="num">${Math.round(r.impr).toLocaleString('en-GB')}</td><td class="num">${isFinite(r.ctr)?r.ctr.toFixed(1)+'%':'–'}</td><td class="num">${isFinite(r.pos)?r.pos.toFixed(1):'–'}</td></tr>`).join('')}</tbody></table></div>`;
+      qp+=`<div><h3>Top queries overall</h3><table><thead><tr><th>Query</th><th class="num">Clicks</th><th class="num">Impr.</th><th class="num">Pos.</th></tr></thead><tbody>${[...Q.data].sort((x,y)=>y.clicks-x.clicks).slice(0,20).map(r=>`<tr><td>${esc(r.k)}${isB(r.k)?' <span class="pill">brand</span>':''}</td><td class="num">${Math.round(r.clicks).toLocaleString('en-GB')}</td><td class="num">${Math.round(r.impr).toLocaleString('en-GB')}</td><td class="num">${isFinite(r.pos)?r.pos.toFixed(1):'–'}</td></tr>`).join('')}</tbody></table></div></div>`; }
+    if(P){ qp+=`<div class="secgap"><h3>Top pages</h3><div style="overflow-x:auto"><table><thead><tr><th>Page</th><th class="num">Clicks</th><th class="num">Impr.</th><th class="num">CTR</th><th class="num">Pos.</th></tr></thead><tbody>${[...P.data].sort((x,y)=>y.clicks-x.clicks).slice(0,20).map(r=>`<tr><td style="word-break:break-all">${esc(r.k)}</td><td class="num">${Math.round(r.clicks).toLocaleString('en-GB')}</td><td class="num">${Math.round(r.impr).toLocaleString('en-GB')}</td><td class="num">${isFinite(r.ctr)?r.ctr.toFixed(1)+'%':'–'}</td><td class="num">${isFinite(r.pos)?r.pos.toFixed(1):'–'}</td></tr>`).join('')}</tbody></table></div></div>`; }
+    document.getElementById('gscQ-'+p).innerHTML=qp;
+  }
+}
+
+/* ======================= 10 REPORTING ======================= */
+function csv(rows){ return rows.map(r=>r.map(v=>{ const s=v===null||v===undefined||(typeof v==='number'&&!isFinite(v))?'':String(typeof v==='number'?+v.toFixed(3):v); return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; }).join(',')).join('\n'); }
+function exportsList(){
+  const out=[];
+  if(OVERVIEW){ out.push(['key-movements-week.csv','Key movements, last complete week', ()=>csv([['term','type','week_start','week_avg','vs_prev_week_pct','vs_prev4_pct','vs_same_week_ly_pct','vs_2yrs_pct','mtd_vs_ly_pct','signal'],...OVERVIEW.rows.map(r=>[r.t,r.brand?'brand':'term',new Date(REF.x(OVERVIEW.s)).toISOString().slice(0,10),r.cur,r.vsPrev,r.vsPrev4,r.vsLY,r.vsLY2,r.mtd,r.sig])])]); }
+  out.push(['daily-yoy-long.csv','Daily this year vs last two years (UK)', ()=>{ const r=[['term','date','this_year','date_ly','last_year','date_ly2','two_years_ago']]; for(const [t,y] of Object.entries(Y)){ const D=DD[t]; for(let i=0;i<=D.last;i++) r.push([t,new Date(D.x(i)).toISOString().slice(0,10),D.ty[i],new Date(y.t[1]*1000+i*DAY).toISOString().slice(0,10),D.ly[i],y.t[2]?new Date(y.t[2]*1000+i*DAY).toISOString().slice(0,10):'',D.ly2[i]]); } return csv(r); }]);
+  out.push(['weekly-5y-long.csv','Weekly, five years, every panel', ()=>{ const r=[['panel','term','week_start','index','partial']]; for(const [gid,g] of Object.entries(G)) g.terms.forEach((t,i)=>g.t.forEach((ts,k)=>r.push([gid,t,new Date(ts*1000).toISOString().slice(0,10),g.v[k][i],g.p[k]]))); return csv(r); }]);
+  out.push(['brands-one-scale.csv','Brands stitched onto one scale (weekly)', ()=>{ const r=[['brand','week_start','index_one_scale']]; for(const [b,s] of Object.entries(BRANDS)) for(const p of s) r.push([b,new Date(p.x).toISOString().slice(0,10),p.y]); return csv(r); }]);
+  out.push(['fixtures.csv','Sporting calendar', ()=>csv([['name','type','tier','start','end'],...FX.map(e=>[e.name,e.type,e.tier,e.start,e.end||''])])]);
+  return out;
+}
+function renderReporting(){
+  renderOverview();
+  if(OVERVIEW){ const {w,C,rows,ours,comp}=OVERVIEW; const a=REF.x(OVERVIEW.s);
+    const gen=rows.filter(r=>!r.brand&&r.sig!=='insufficient').sort((x,y)=>y.vsLY-x.vsLY);
+    const txt=[`Flutter UKI ${VC.label} demand: weekly flash, Wk ${w.w} (${fmtD(a)} – ${fmtDY(a+6*DAY)})`,'',
+      `• UK ${VC.noun} search: ${sgnPlain(C.vsLY)} vs same week LY, ${sgnPlain(C.vsPrev)} vs previous week, MTD ${sgnPlain(C.mtd)} vs LY (avg of ${C.n} terms).`,
+      `• Strongest: ${gen.slice(0,2).map(r=>`${r.t} ${sgnPlain(r.vsLY)}`).join(', ')}. Weakest: ${gen.slice(-2).reverse().map(r=>`${r.t} ${sgnPlain(r.vsLY)}`).join(', ')}.`,
+      `• Our brands YoY: ${ours.map(r=>`${title(r.t)} ${sgnPlain(r.vsLY)}`).join(', ')}.`,
+      `• Competitors YoY: ${comp.map(r=>`${title(r.t)} ${sgnPlain(r.vsLY)}`).join(', ')}.`,
+      `• Share of brand search (4 wks, ${SHARE_POOL.length} brands): ours ${ourShare.toFixed(1)}% (${(ourShare-ourShareLY>0?'+':'')+(ourShare-ourShareLY).toFixed(1)} pts YoY).`,
+      `• Last week: ${OVERVIEW.lastLine}.`,
+      `• This week: ${OVERVIEW.nextLine}.`, ...(OVERVIEW.popNote?[`• ${OVERVIEW.popNote}.`]:[]),'',
+      'Source: Google Trends, United Kingdom. Relative search interest, not volumes.'].join('\n');
+    document.getElementById('flash').textContent=txt; }
+  const ex=document.getElementById('exports'); ex.innerHTML='';
+  for(const [fn,label,make] of exportsList()){
+    const row=document.createElement('div'); row.style.cssText='display:flex;gap:8px;align-items:center';
+    row.innerHTML=`<span style="flex:1">${esc(label)} <span class="muted">${fn}</span></span>`;
+    const dl=document.createElement('button'); dl.className='btn'; dl.textContent='Download';
+    dl.onclick=async()=>{ const ok=await saveFile(fn, new Blob([make()],{type:'text/csv'})); dl.textContent=ok?'✓ Saved':'Download'; setTimeout(()=>dl.textContent='Download',1500); };
+    const cp=document.createElement('button'); cp.className='btn'; cp.textContent='Copy';
+    cp.onclick=async()=>{ try{ await navigator.clipboard.writeText(make()); cp.textContent='Copied'; }catch(e){ cp.textContent='Copy blocked'; } setTimeout(()=>cp.textContent='Copy',1500); };
+    row.append(dl,cp); ex.append(row); }
+  const st=T.status||{};
+  document.getElementById('statusNote').textContent=`Region: United Kingdom (geo ${T.geo||CFG.geo||'GB'}). Last refresh ${T.pulled||'–'}. Stale rows keep their last good data.`;
+  document.getElementById('statusTable').innerHTML=`<thead><tr><th>Dataset</th><th>Last success (UTC)</th><th>Source</th><th>Status</th></tr></thead><tbody>`+
+    Object.entries(st).sort().map(([k,v])=>`<tr><td>${esc(k)}</td><td>${esc((v.ok_at||'–').replace('T',' ').replace('Z',''))}</td><td class="muted">${esc(v.source||'')}</td><td>${v.error?`<span class="sig below">stale: ${esc(v.error)}</span>`:'<span class="sig above">ok</span>'}</td></tr>`).join('')+'</tbody>';
+}
+document.getElementById('copyFlash').onclick=async e=>{ const b=e.currentTarget; try{ await navigator.clipboard.writeText(document.getElementById('flash').textContent); b.textContent='Copied'; }catch(_){ b.textContent='Select & copy'; } setTimeout(()=>b.textContent='Copy',1500); };
+
+
+/* ======================= file saving + PNG export ======================= */
+async function saveFile(filename, blob){
+  try{ const u=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=u; a.download=filename; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),4000); return true; }catch(e){ return false; }
+}
+function chartTitleFor(canvas){
+  const box=canvas.closest('.chartbox'); const card=canvas.closest('.card'); const page=document.getElementById('pageTitle').textContent;
+  const h=(box&&box.parentElement.querySelector(':scope > h3')) || (card&&card.querySelector('h3'));
+  let t=(h&&h.textContent.trim()) || page;
+  const prop=canvas.closest('[id^="gsc-"]'); if(prop){ const ph=prop.querySelector('h3'); if(ph && ph!==h) t=ph.textContent.trim()+': '+t; }
+  if(canvas.closest('#p-tv')===null && VC) t=VC.label+' · '+t;
+  if(canvas.id==='fcChart') t='26-week outlook: '+fcSel.value; if(canvas.id==='evChart') t=evSel.options[evSel.selectedIndex].text;
+  if(canvas.id==='moLong') t='Monthly average: '+moTerm.value; if(canvas.id==='brChart') t='Brand search interest, weekly, one scale';
+  return t;
+}
+function chartPNG(canvas){
+  const ch=Chart.getChart(canvas); const dpr=canvas.width/canvas.clientWidth||1;
+  const title=chartTitleFor(canvas); const legendEl=canvas.closest('.chartbox').parentElement.querySelector('.legend');
+  const legendItems=legendEl?[...legendEl.querySelectorAll(':scope > span')].map(sp=>({c:(sp.querySelector('.dot')||{}).style?.background||'#888', t:sp.textContent.trim()})):[];
+  const pad=18*dpr, head=46*dpr, legH=legendItems.length?24*dpr:0, foot=24*dpr;
+  const out=document.createElement('canvas'); out.width=canvas.width+pad*2; out.height=canvas.height+head+legH+foot+pad;
+  const x=out.getContext('2d'); x.fillStyle='#ffffff'; x.fillRect(0,0,out.width,out.height);
+  x.fillStyle='#0b0b0b'; x.font=`600 ${15*dpr}px system-ui,-apple-system,"Segoe UI",sans-serif`; x.fillText(title, pad, pad+12*dpr);
+  x.fillStyle='#52514e'; x.font=`${11.5*dpr}px system-ui,-apple-system,"Segoe UI",sans-serif`; x.fillText(document.getElementById('pageTitle').textContent+' · Flutter UKI industry demand', pad, pad+30*dpr);
+  x.drawImage(canvas, pad, head+pad*0.4);
+  let lx=pad, ly=head+pad*0.4+canvas.height+16*dpr; x.font=`${11.5*dpr}px system-ui,-apple-system,"Segoe UI",sans-serif`;
+  for(const it of legendItems){ x.fillStyle=it.c; x.beginPath(); x.arc(lx+4*dpr, ly-4*dpr, 4*dpr, 0, Math.PI*2); x.fill(); x.fillStyle='#52514e'; x.fillText(it.t, lx+12*dpr, ly); lx+=x.measureText(it.t).width+30*dpr; }
+  x.fillStyle='#898781'; x.font=`${10.5*dpr}px system-ui,-apple-system,"Segoe UI",sans-serif`;
+  x.fillText(`Source: Google Trends (United Kingdom), relative interest 0–100, not search volumes. ${T.pulled?'Data '+T.pulled.slice(0,10)+'.':''}`, pad, out.height-pad*0.6);
+  return new Promise(res=>out.toBlob(res,'image/png'));
+}
+const slug = t => t.toLowerCase().replace(/[“”"']/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,70);
+function addPngButtons(){
+  document.querySelectorAll('.page.on .chartbox').forEach(box=>{
+    if(box.previousElementSibling && box.previousElementSibling.classList.contains('pngbar')) return;
+    const bar=document.createElement('div'); bar.className='pngbar';
+    const b=document.createElement('button'); b.type='button'; b.textContent='⤓ PNG'; b.title='Download this chart as a PNG image';
+    b.onclick=async()=>{ const c=box.querySelector('canvas'); if(!c||!Chart.getChart(c)) return; b.textContent='…';
+      const blob=await chartPNG(c); const ok=blob && await saveFile(`${slug(chartTitleFor(c))||'chart'}-${(T.pulled||'').slice(0,10)}.png`, blob);
+      b.textContent= ok?'✓ Saved':'⤓ PNG'; setTimeout(()=>b.textContent='⤓ PNG',1500); };
+    bar.append(b); box.parentElement.insertBefore(bar, box);
+  });
+}
+
+/* ======================= router ======================= */
+const PAGES={overview:['Overview',renderOverview],event:['Event Demand',renderEvent],weekly:['Weekly Analysis',renderWeekly],monthly:['Monthly Analysis',renderMonthly],outlook:['Outlook (26 weeks)',renderOutlook],calendar:['Calendar',renderCalendar],brand:['Brand Intelligence',renderBrand],tv:['TV & Entertainment',renderTV],search:['SEO & Search Intelligence',renderSearch],gsc:['Search Console (CSV)',renderGSC],reporting:['Reporting & Exports',renderReporting]};
+let CURKEY='overview';
+function route(){
+  let k=(location.hash||'#overview').slice(1), v='sportsbook';
+  for(const name of Object.keys(VERTS)){ if(name==='sportsbook') continue; if(k===name){ v=name; k='overview'; } else if(k.startsWith(name+'-')){ v=name; k=k.slice(name.length+1); } }
+  const key=PAGES[k]?k:'overview'; CURKEY=key;
+  if(v!==V) applyVertical(v);
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id==='p-'+key));
+  document.querySelectorAll('aside a[data-k]').forEach(a=>a.classList.toggle('on',a.dataset.k===key && !a.closest('.navfoot')));
+  document.getElementById('pageTitle').textContent = key==='event' ? document.getElementById('navEvent').textContent : PAGES[key][0];
+  document.title = `${CFG.title||'Flutter UKI industry demand dashboard'} · ${VC.label}`;
+  try{ PAGES[key][1](); }catch(e){ console.error(e); }
+  addPngButtons();
+}
+document.getElementById('vtabs').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b||b.dataset.v===V) return; location.hash=(b.dataset.v==='sportsbook'?'':b.dataset.v+'-')+CURKEY; });
+window.addEventListener('hashchange',()=>{ route(); window.scrollTo(0,0); });
+route();
+</script>
+</body>
+</html>

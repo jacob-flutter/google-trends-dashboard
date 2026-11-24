@@ -1,0 +1,518 @@
+{
+ "_readme": "Edit by hand. type: football | racing | darts | rugby | tournament | tv | regulation | other. tier 1 = market-moving, 2 = notable. end is optional. approx: true means the start or end date is expected, not confirmed. Fixtures and TV schedules move, so re-check before planning around them.",
+ "updated": "2026-11-23",
+ "events": [
+  {
+   "name": "Premier League 2021/22 ends",
+   "type": "football",
+   "tier": 2,
+   "start": "2022-05-22"
+  },
+  {
+   "name": "Cheltenham Festival 2022",
+   "type": "racing",
+   "tier": 1,
+   "start": "2022-03-15",
+   "end": "2022-03-18"
+  },
+  {
+   "name": "Grand National 2022",
+   "type": "racing",
+   "tier": 1,
+   "start": "2022-04-09"
+  },
+  {
+   "name": "Champions League final 2022",
+   "type": "football",
+   "tier": 2,
+   "start": "2022-05-28"
+  },
+  {
+   "name": "Royal Ascot 2022",
+   "type": "racing",
+   "tier": 2,
+   "start": "2022-06-14",
+   "end": "2022-06-18"
+  },
+  {
+   "name": "Premier League 2022/23 starts",
+   "type": "football",
+   "tier": 1,
+   "start": "2022-08-05"
+  },
+  {
+   "name": "FIFA World Cup 2022 (Qatar)",
+   "type": "tournament",
+   "tier": 1,
+   "start": "2022-11-20",
+   "end": "2022-12-18"
+  },
+  {
+   "name": "PDC World Darts 2022/23",
+   "type": "darts",
+   "tier": 2,
+   "start": "2022-12-15",
+   "end": "2023-01-03"
+  },
+  {
+   "name": "Cheltenham Festival 2023",
+   "type": "racing",
+   "tier": 1,
+   "start": "2023-03-14",
+   "end": "2023-03-17"
+  },
+  {
+   "name": "Grand National 2023",
+   "type": "racing",
+   "tier": 1,
+   "start": "2023-04-15"
+  },
+  {
+   "name": "Premier League 2022/23 ends",
+   "type": "football",
+   "tier": 2,
+   "start": "2023-05-28"
+  },
+  {
+   "name": "Champions League final 2023",
+   "type": "football",
+   "tier": 2,
+   "start": "2023-06-10"
+  },
+  {
+   "name": "Royal Ascot 2023",
+   "type": "racing",
+   "tier": 2,
+   "start": "2023-06-20",
+   "end": "2023-06-24"
+  },
+  {
+   "name": "Premier League 2023/24 starts",
+   "type": "football",
+   "tier": 1,
+   "start": "2023-08-11"
+  },
+  {
+   "name": "PDC World Darts 2023/24",
+   "type": "darts",
+   "tier": 2,
+   "start": "2023-12-15",
+   "end": "2024-01-03"
+  },
+  {
+   "name": "Cheltenham Festival 2024",
+   "type": "racing",
+   "tier": 1,
+   "start": "2024-03-12",
+   "end": "2024-03-15"
+  },
+  {
+   "name": "Grand National 2024",
+   "type": "racing",
+   "tier": 1,
+   "start": "2024-04-13"
+  },
+  {
+   "name": "Premier League 2023/24 ends",
+   "type": "football",
+   "tier": 2,
+   "start": "2024-05-19"
+  },
+  {
+   "name": "Champions League final 2024",
+   "type": "football",
+   "tier": 2,
+   "start": "2024-06-01"
+  },
+  {
+   "name": "UEFA Euro 2024 (Germany)",
+   "type": "tournament",
+   "tier": 1,
+   "start": "2024-06-14",
+   "end": "2024-07-14"
+  },
+  {
+   "name": "Royal Ascot 2024",
+   "type": "racing",
+   "tier": 2,
+   "start": "2024-06-18",
+   "end": "2024-06-22"
+  },
+  {
+   "name": "Premier League 2024/25 starts",
+   "type": "football",
+   "tier": 1,
+   "start": "2024-08-16"
+  },
+  {
+   "name": "PDC World Darts 2024/25",
+   "type": "darts",
+   "tier": 2,
+   "start": "2024-12-15",
+   "end": "2025-01-03"
+  },
+  {
+   "name": "Cheltenham Festival 2025",
+   "type": "racing",
+   "tier": 1,
+   "start": "2025-03-11",
+   "end": "2025-03-14"
+  },
+  {
+   "name": "Grand National 2025",
+   "type": "racing",
+   "tier": 1,
+   "start": "2025-04-05"
+  },
+  {
+   "name": "Premier League 2024/25 ends",
+   "type": "football",
+   "tier": 2,
+   "start": "2025-05-25"
+  },
+  {
+   "name": "Champions League final 2025",
+   "type": "football",
+   "tier": 2,
+   "start": "2025-05-31"
+  },
+  {
+   "name": "Royal Ascot 2025",
+   "type": "racing",
+   "tier": 2,
+   "start": "2025-06-17",
+   "end": "2025-06-21"
+  },
+  {
+   "name": "Premier League 2025/26 starts",
+   "type": "football",
+   "tier": 1,
+   "start": "2025-08-15"
+  },
+  {
+   "name": "PDC World Darts 2025/26",
+   "type": "darts",
+   "tier": 2,
+   "start": "2025-12-11",
+   "end": "2026-01-03"
+  },
+  {
+   "name": "Boxing Day 2025: 1 PL game",
+   "type": "football",
+   "tier": 2,
+   "start": "2025-12-26"
+  },
+  {
+   "name": "Cheltenham Festival 2026",
+   "type": "racing",
+   "tier": 1,
+   "start": "2026-03-10",
+   "end": "2026-03-13"
+  },
+  {
+   "name": "Remote Gaming Duty rises to 40%",
+   "type": "regulation",
+   "tier": 2,
+   "start": "2026-04-01"
+  },
+  {
+   "name": "Grand National 2026",
+   "type": "racing",
+   "tier": 1,
+   "start": "2026-04-11"
+  },
+  {
+   "name": "Premier League 2025/26 ends",
+   "type": "football",
+   "tier": 2,
+   "start": "2026-05-24"
+  },
+  {
+   "name": "Champions League final 2026",
+   "type": "football",
+   "tier": 2,
+   "start": "2026-05-30"
+  },
+  {
+   "name": "FIFA World Cup 2026 (N. America)",
+   "type": "tournament",
+   "tier": 1,
+   "start": "2026-06-11",
+   "end": "2026-07-19"
+  },
+  {
+   "name": "Royal Ascot 2026",
+   "type": "racing",
+   "tier": 2,
+   "start": "2026-06-16",
+   "end": "2026-06-20"
+  },
+  {
+   "name": "Premier League 2026/27 starts",
+   "type": "football",
+   "tier": 1,
+   "start": "2026-08-21"
+  },
+  {
+   "name": "UCL league phase MD1",
+   "type": "football",
+   "tier": 2,
+   "start": "2026-09-08",
+   "end": "2026-09-10"
+  },
+  {
+   "name": "UCL league phase MD2-MD3",
+   "type": "football",
+   "tier": 2,
+   "start": "2026-10-13",
+   "end": "2026-10-21"
+  },
+  {
+   "name": "UCL league phase MD4",
+   "type": "football",
+   "tier": 2,
+   "start": "2026-11-03",
+   "end": "2026-11-04"
+  },
+  {
+   "name": "UCL league phase MD5",
+   "type": "football",
+   "tier": 2,
+   "start": "2026-11-24",
+   "end": "2026-11-25"
+  },
+  {
+   "name": "UCL league phase MD6",
+   "type": "football",
+   "tier": 2,
+   "start": "2026-12-08",
+   "end": "2026-12-09"
+  },
+  {
+   "name": "PDC World Darts 2026/27 (Great Hall)",
+   "type": "darts",
+   "tier": 1,
+   "start": "2026-12-11",
+   "end": "2027-01-03"
+  },
+  {
+   "name": "Boxing Day 2026: 7 PL games",
+   "type": "football",
+   "tier": 1,
+   "start": "2026-12-26"
+  },
+  {
+   "name": "PL festive run (30 Dec, 2 Jan, 6 Jan)",
+   "type": "football",
+   "tier": 2,
+   "start": "2026-12-30",
+   "end": "2027-01-06"
+  },
+  {
+   "name": "FA Cup third round",
+   "type": "football",
+   "tier": 2,
+   "start": "2027-01-09"
+  },
+  {
+   "name": "UCL league phase MD7-MD8",
+   "type": "football",
+   "tier": 2,
+   "start": "2027-01-19",
+   "end": "2027-01-27"
+  },
+  {
+   "name": "Six Nations 2027",
+   "type": "rugby",
+   "tier": 2,
+   "start": "2027-02-05",
+   "end": "2027-03-13"
+  },
+  {
+   "name": "UCL knockout play-offs",
+   "type": "football",
+   "tier": 2,
+   "start": "2027-02-16",
+   "end": "2027-02-24"
+  },
+  {
+   "name": "UCL round of 16",
+   "type": "football",
+   "tier": 2,
+   "start": "2027-03-09",
+   "end": "2027-03-17"
+  },
+  {
+   "name": "Cheltenham Festival 2027",
+   "type": "racing",
+   "tier": 1,
+   "start": "2027-03-16",
+   "end": "2027-03-19"
+  },
+  {
+   "name": "Carabao Cup final",
+   "type": "football",
+   "tier": 2,
+   "start": "2027-03-21"
+  },
+  {
+   "name": "UCL quarter-finals",
+   "type": "football",
+   "tier": 2,
+   "start": "2027-04-06",
+   "end": "2027-04-14"
+  },
+  {
+   "name": "Remote General Betting Duty 25% (from April)",
+   "type": "regulation",
+   "tier": 2,
+   "start": "2027-04-01"
+  },
+  {
+   "name": "Grand National 2027",
+   "type": "racing",
+   "tier": 1,
+   "start": "2027-04-10"
+  },
+  {
+   "name": "UCL semi-finals",
+   "type": "football",
+   "tier": 2,
+   "start": "2027-04-27",
+   "end": "2027-05-05"
+  },
+  {
+   "name": "FA Cup final",
+   "type": "football",
+   "tier": 2,
+   "start": "2027-05-22"
+  },
+  {
+   "name": "Premier League final day",
+   "type": "football",
+   "tier": 1,
+   "start": "2027-05-30"
+  },
+  {
+   "name": "Champions League final 2027 (Madrid)",
+   "type": "football",
+   "tier": 1,
+   "start": "2027-06-05"
+  },
+  {
+   "name": "Royal Ascot 2027",
+   "type": "racing",
+   "tier": 2,
+   "start": "2027-06-15",
+   "end": "2027-06-19"
+  },
+  {
+   "name": "The Ashes (England)",
+   "type": "other",
+   "tier": 2,
+   "start": "2027-06-18",
+   "end": "2027-08-02"
+  },
+  {
+   "name": "FIFA Women's World Cup 2027 (Brazil)",
+   "type": "tournament",
+   "tier": 2,
+   "start": "2027-06-24",
+   "end": "2027-07-25"
+  },
+  {
+   "name": "Rugby World Cup 2027 (Australia)",
+   "type": "rugby",
+   "tier": 2,
+   "start": "2027-10-01",
+   "end": "2027-11-13"
+  },
+  {
+   "name": "Strictly Come Dancing 2025",
+   "type": "tv",
+   "tier": 1,
+   "start": "2025-09-20",
+   "end": "2025-12-20",
+   "approx": true
+  },
+  {
+   "name": "Big Brother 2025",
+   "type": "tv",
+   "tier": 2,
+   "start": "2025-09-28",
+   "end": "2025-11-14"
+  },
+  {
+   "name": "I'm a Celebrity 2025",
+   "type": "tv",
+   "tier": 1,
+   "start": "2025-11-16",
+   "end": "2025-12-07"
+  },
+  {
+   "name": "The Traitors series 4",
+   "type": "tv",
+   "tier": 1,
+   "start": "2026-01-01",
+   "end": "2026-01-23",
+   "approx": true
+  },
+  {
+   "name": "I'm a Celebrity South Africa",
+   "type": "tv",
+   "tier": 2,
+   "start": "2026-04-06",
+   "end": "2026-04-24"
+  },
+  {
+   "name": "Eurovision 2026 final",
+   "type": "tv",
+   "tier": 2,
+   "start": "2026-05-16"
+  },
+  {
+   "name": "Big Brother 2026",
+   "type": "tv",
+   "tier": 2,
+   "start": "2026-09-13",
+   "end": "2026-11-06",
+   "approx": true
+  },
+  {
+   "name": "Strictly Come Dancing 2026",
+   "type": "tv",
+   "tier": 1,
+   "start": "2026-09-19",
+   "end": "2026-12-19",
+   "approx": true
+  },
+  {
+   "name": "I'm a Celebrity 2026",
+   "type": "tv",
+   "tier": 1,
+   "start": "2026-11-16",
+   "end": "2026-12-06",
+   "approx": true
+  },
+  {
+   "name": "The Traitors series 5 (expected early January)",
+   "type": "tv",
+   "tier": 1,
+   "start": "2027-01-01",
+   "end": "2027-01-22",
+   "approx": true
+  },
+  {
+   "name": "Online slots stake limit £5 (age 25+)",
+   "type": "regulation",
+   "tier": 2,
+   "start": "2025-04-09"
+  },
+  {
+   "name": "Online slots stake limit £2 (age 18–24)",
+   "type": "regulation",
+   "tier": 2,
+   "start": "2025-05-21"
+  }
+ ]
+}

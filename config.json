@@ -1,0 +1,866 @@
+{
+  "_readme": "Edit this file to change what is tracked. Region is fixed to the United Kingdom (geo GB). 'verticals' defines the Sportsbook and Gaming dashboards: our brands, the anchor brand used to put every brand on one scale (it must be the first term of every brand group in that vertical), and the terms pulled daily with year-on-year history. Each entry in 'groups' is ONE Google Trends request (max 5 terms on one 0-100 scale) and belongs to a vertical (sportsbook, gaming or tv).",
+  "geo": "GB",
+  "hl": "en-GB",
+  "brand_domains": {
+    "sky bet": "skybet.com",
+    "paddy power": "paddypower.com",
+    "betfair": "betfair.com",
+    "bet365": "bet365.com",
+    "william hill": "williamhill.com",
+    "ladbrokes": "ladbrokes.com",
+    "betfred": "betfred.com",
+    "betway": "betway.com",
+    "midnite": "midnite.com",
+    "coral": "coral.co.uk",
+    "kwiff": "kwiff.com",
+    "betvictor": "betvictor.com",
+    "star sports": "starsports.bet",
+    "sky vegas": "skyvegas.com",
+    "sky bingo": "skybingo.com",
+    "sky casino": "skycasino.com",
+    "paddy power games": "games.paddypower.com",
+    "paddy power bingo": "bingo.paddypower.com",
+    "betfair casino": "casino.betfair.com",
+    "betfair bingo": "bingo.betfair.com",
+    "tombola": "tombola.co.uk",
+    "mecca bingo": "meccabingo.com",
+    "gala bingo": "galabingo.com",
+    "foxy bingo": "foxybingo.com",
+    "jackpotjoy": "jackpotjoy.com",
+    "virgin games": "virgingames.com",
+    "888 casino": "888casino.com",
+    "grosvenor casino": "grosvenorcasinos.com",
+    "mrq": "mrq.com",
+    "leovegas": "leovegas.co.uk",
+    "bet365 casino": "casino.bet365.com",
+    "buzz bingo": "buzzbingo.com",
+    "heart bingo": "heartbingo.co.uk",
+    "mr vegas": "mrvegas.com"
+  },
+  "ambiguous_terms": [
+    "coral",
+    "boxing",
+    "world cup",
+    "starburst",
+    "the chase",
+    "big brother",
+    "gladiators",
+    "the apprentice",
+    "wheel of fortune"
+  ],
+  "groups": {
+    "cat1": {
+      "family": "category",
+      "label": "Betting intent",
+      "time": "today 5-y",
+      "ttl_hours": 144,
+      "terms": [
+        "betting",
+        "betting odds",
+        "free bets",
+        "betting sites",
+        "bet builder"
+      ],
+      "vertical": "sportsbook"
+    },
+    "cat4": {
+      "family": "category",
+      "label": "Offers and products (high resolution)",
+      "time": "today 5-y",
+      "ttl_hours": 144,
+      "terms": [
+        "free bets",
+        "bet builder",
+        "acca",
+        "football betting",
+        "betting tips"
+      ],
+      "vertical": "sportsbook"
+    },
+    "cat2": {
+      "family": "category",
+      "label": "Bet types and tips",
+      "time": "today 5-y",
+      "ttl_hours": 144,
+      "terms": [
+        "betting",
+        "acca",
+        "each way",
+        "horse racing tips",
+        "football tips"
+      ],
+      "vertical": "sportsbook"
+    },
+    "cat3": {
+      "family": "gaming",
+      "label": "Gaming and lottery",
+      "time": "today 5-y",
+      "ttl_hours": 144,
+      "terms": [
+        "betting",
+        "casino",
+        "slots",
+        "lottery",
+        "poker"
+      ],
+      "vertical": "sportsbook"
+    },
+    "drv1": {
+      "family": "sport",
+      "label": "Sport demand drivers",
+      "time": "today 5-y",
+      "ttl_hours": 144,
+      "terms": [
+        "betting",
+        "premier league",
+        "champions league",
+        "horse racing",
+        "darts"
+      ],
+      "vertical": "sportsbook"
+    },
+    "drv2": {
+      "family": "event",
+      "label": "Tent-pole events",
+      "time": "today 5-y",
+      "ttl_hours": 144,
+      "terms": [
+        "betting",
+        "cheltenham",
+        "grand national",
+        "world cup",
+        "boxing"
+      ],
+      "vertical": "sportsbook"
+    },
+    "br1": {
+      "family": "brand",
+      "label": "Brands A",
+      "time": "today 5-y",
+      "ttl_hours": 144,
+      "terms": [
+        "bet365",
+        "sky bet",
+        "paddy power",
+        "betfair",
+        "william hill"
+      ],
+      "vertical": "sportsbook"
+    },
+    "br2": {
+      "family": "brand",
+      "label": "Brands B",
+      "time": "today 5-y",
+      "ttl_hours": 144,
+      "terms": [
+        "bet365",
+        "ladbrokes",
+        "betfred",
+        "betway",
+        "midnite"
+      ],
+      "vertical": "sportsbook"
+    },
+    "br3": {
+      "family": "brand",
+      "label": "Brands C",
+      "time": "today 5-y",
+      "ttl_hours": 144,
+      "terms": [
+        "bet365",
+        "coral",
+        "kwiff",
+        "betvictor",
+        "star sports"
+      ],
+      "vertical": "sportsbook"
+    },
+    "d2": {
+      "family": "daily_brand",
+      "label": "Daily: our brands vs bet365",
+      "time": "today 3-m",
+      "ttl_hours": 20,
+      "terms": [
+        "betting",
+        "sky bet",
+        "paddy power",
+        "betfair",
+        "bet365"
+      ],
+      "vertical": "sportsbook"
+    },
+    "d3": {
+      "family": "daily_sport",
+      "label": "Daily: sport drivers",
+      "time": "today 3-m",
+      "ttl_hours": 20,
+      "terms": [
+        "betting",
+        "premier league",
+        "champions league",
+        "darts",
+        "horse racing"
+      ],
+      "vertical": "sportsbook"
+    },
+    "gcat1": {
+      "vertical": "gaming",
+      "family": "category",
+      "label": "Gaming demand",
+      "time": "today 5-y",
+      "ttl_hours": 144,
+      "terms": [
+        "online casino",
+        "slots",
+        "bingo",
+        "casino",
+        "free spins"
+      ]
+    },
+    "gcat2": {
+      "vertical": "gaming",
+      "family": "category",
+      "label": "Products",
+      "time": "today 5-y",
+      "ttl_hours": 144,
+      "terms": [
+        "online slots",
+        "online bingo",
+        "roulette",
+        "blackjack",
+        "live casino"
+      ]
+    },
+    "gcat3": {
+      "vertical": "gaming",
+      "family": "category",
+      "label": "Offers and comparison",
+      "time": "today 5-y",
+      "ttl_hours": 144,
+      "terms": [
+        "free spins",
+        "casino bonus",
+        "no deposit bonus",
+        "bingo sites",
+        "slot sites"
+      ]
+    },
+    "gcat4": {
+      "vertical": "gaming",
+      "family": "category",
+      "label": "Slot game titles",
+      "time": "today 5-y",
+      "ttl_hours": 144,
+      "terms": [
+        "big bass bonanza",
+        "rainbow riches",
+        "starburst",
+        "fishin frenzy",
+        "book of dead"
+      ]
+    },
+    "gbr1": {
+      "vertical": "gaming",
+      "family": "brand",
+      "label": "Gaming brands A",
+      "time": "today 5-y",
+      "ttl_hours": 144,
+      "terms": [
+        "sky vegas",
+        "sky bingo",
+        "sky casino",
+        "paddy power games",
+        "paddy power bingo"
+      ]
+    },
+    "gbr2": {
+      "vertical": "gaming",
+      "family": "brand",
+      "label": "Gaming brands B",
+      "time": "today 5-y",
+      "ttl_hours": 144,
+      "terms": [
+        "sky vegas",
+        "betfair casino",
+        "betfair bingo",
+        "tombola",
+        "mecca bingo"
+      ]
+    },
+    "gbr3": {
+      "vertical": "gaming",
+      "family": "brand",
+      "label": "Gaming brands C",
+      "time": "today 5-y",
+      "ttl_hours": 144,
+      "terms": [
+        "sky vegas",
+        "gala bingo",
+        "foxy bingo",
+        "jackpotjoy",
+        "virgin games"
+      ]
+    },
+    "gbr4": {
+      "vertical": "gaming",
+      "family": "brand",
+      "label": "Gaming brands D",
+      "time": "today 5-y",
+      "ttl_hours": 144,
+      "terms": [
+        "sky vegas",
+        "888 casino",
+        "grosvenor casino",
+        "mrq",
+        "leovegas"
+      ]
+    },
+    "gbr5": {
+      "vertical": "gaming",
+      "family": "brand",
+      "label": "Gaming brands E",
+      "time": "today 5-y",
+      "ttl_hours": 144,
+      "terms": [
+        "sky vegas",
+        "bet365 casino",
+        "buzz bingo",
+        "heart bingo",
+        "mr vegas"
+      ]
+    },
+    "gd1": {
+      "vertical": "gaming",
+      "family": "daily",
+      "label": "Daily: gaming demand",
+      "time": "today 3-m",
+      "ttl_hours": 20,
+      "terms": [
+        "online casino",
+        "slots",
+        "bingo",
+        "free spins",
+        "roulette"
+      ]
+    },
+    "gd2": {
+      "vertical": "gaming",
+      "family": "daily_brand",
+      "label": "Daily: gaming brands",
+      "time": "today 3-m",
+      "ttl_hours": 20,
+      "terms": [
+        "sky vegas",
+        "sky bingo",
+        "sky casino",
+        "paddy power games",
+        "tombola"
+      ]
+    },
+    "tv1": {
+      "vertical": "tv",
+      "family": "category",
+      "label": "Reality and talent shows",
+      "time": "today 5-y",
+      "ttl_hours": 144,
+      "terms": [
+        "strictly come dancing",
+        "i'm a celebrity",
+        "the traitors",
+        "big brother",
+        "love island"
+      ]
+    },
+    "tv2": {
+      "vertical": "tv",
+      "family": "category",
+      "label": "Entertainment shows",
+      "time": "today 5-y",
+      "ttl_hours": 144,
+      "terms": [
+        "britain's got talent",
+        "eurovision",
+        "gladiators",
+        "bake off",
+        "the apprentice"
+      ]
+    },
+    "tv3": {
+      "vertical": "tv",
+      "family": "category",
+      "label": "Game-show formats (also slot and bingo titles)",
+      "time": "today 5-y",
+      "ttl_hours": 144,
+      "terms": [
+        "deal or no deal",
+        "the chase",
+        "tipping point",
+        "who wants to be a millionaire",
+        "wheel of fortune"
+      ]
+    },
+    "tv4": {
+      "vertical": "tv",
+      "family": "category",
+      "label": "TV specials betting interest",
+      "time": "today 5-y",
+      "ttl_hours": 144,
+      "terms": [
+        "strictly odds",
+        "i'm a celebrity odds",
+        "traitors odds",
+        "big brother odds",
+        "eurovision odds"
+      ]
+    }
+  },
+  "football_feed": {
+    "days_back": 120,
+    "days_ahead": 60,
+    "leagues": {
+      "eng.1": {
+        "name": "Premier League"
+      },
+      "uefa.champions": {
+        "name": "Champions League",
+        "midweek_only": true
+      },
+      "uefa.europa": {
+        "name": "Europa League",
+        "midweek_only": true
+      },
+      "eng.2": {
+        "name": "Championship"
+      },
+      "eng.fa": {
+        "name": "FA Cup"
+      },
+      "eng.league_cup": {
+        "name": "Carabao Cup",
+        "midweek_only": true
+      },
+      "sco.1": {
+        "name": "Scottish Premiership"
+      }
+    },
+    "compare_years_back": 1,
+    "international": {
+      "uefa.nations": {
+        "name": "Nations League"
+      },
+      "fifa.worldq.uefa": {
+        "name": "World Cup qualifying"
+      },
+      "fifa.friendly": {
+        "name": "International friendlies"
+      }
+    },
+    "home_nations": [
+      "England",
+      "Scotland",
+      "Wales",
+      "Northern Ireland",
+      "Republic of Ireland"
+    ]
+  },
+  "search_console": {
+    "_readme": "Properties for the Search Console page. 'trends_brand' links each property to its Google Trends brand term; 'brand_patterns' decide which queries count as branded. Put shared CSV exports in data/gsc/<property-key>/ (e.g. data/gsc/skybet/Dates.csv).",
+    "properties": {
+      "skybet": {
+        "label": "Sky Bet (skybet.com)",
+        "trends_brand": "sky bet",
+        "brand_patterns": [
+          "sky bet",
+          "skybet",
+          "sky bet com",
+          "skybet.com",
+          "sky betting"
+        ]
+      },
+      "paddypower": {
+        "label": "Paddy Power (paddypower.com)",
+        "trends_brand": "paddy power",
+        "brand_patterns": [
+          "paddy power",
+          "paddypower",
+          "paddy power com",
+          "paddypower.com",
+          "paddy"
+        ]
+      },
+      "betfair": {
+        "label": "Betfair (betfair.com)",
+        "trends_brand": "betfair",
+        "brand_patterns": [
+          "betfair",
+          "bet fair",
+          "betfair.com"
+        ]
+      },
+      "skyvegas": {
+        "label": "Sky Vegas (skyvegas.com)",
+        "trends_brand": "sky vegas",
+        "brand_patterns": [
+          "sky vegas",
+          "skyvegas"
+        ]
+      },
+      "skybingo": {
+        "label": "Sky Bingo (skybingo.com)",
+        "trends_brand": "sky bingo",
+        "brand_patterns": [
+          "sky bingo",
+          "skybingo"
+        ]
+      },
+      "skycasino": {
+        "label": "Sky Casino (skycasino.com)",
+        "trends_brand": "sky casino",
+        "brand_patterns": [
+          "sky casino",
+          "skycasino"
+        ]
+      },
+      "ppgames": {
+        "label": "Paddy Power Games",
+        "trends_brand": "paddy power games",
+        "brand_patterns": [
+          "paddy power",
+          "paddypower"
+        ]
+      },
+      "ppbingo": {
+        "label": "Paddy Power Bingo",
+        "trends_brand": "paddy power bingo",
+        "brand_patterns": [
+          "paddy power",
+          "paddypower"
+        ]
+      },
+      "betfaircasino": {
+        "label": "Betfair Casino",
+        "trends_brand": "betfair casino",
+        "brand_patterns": [
+          "betfair",
+          "bet fair"
+        ]
+      },
+      "betfairbingo": {
+        "label": "Betfair Bingo",
+        "trends_brand": "betfair bingo",
+        "brand_patterns": [
+          "betfair",
+          "bet fair"
+        ]
+      },
+      "other": {
+        "label": "Other property",
+        "trends_brand": "",
+        "brand_patterns": []
+      }
+    }
+  },
+  "yoy_daily": {
+    "days": 120,
+    "years_back": 2,
+    "ttl_hours": 20
+  },
+  "related": {
+    "time": "today 3-m",
+    "ttl_hours": 144
+  },
+  "title": "Flutter UKI industry demand dashboard",
+  "verticals": {
+    "sportsbook": {
+      "label": "Sportsbook",
+      "noun": "betting",
+      "headline_term": "betting",
+      "our_brands": [
+        "sky bet",
+        "paddy power",
+        "betfair"
+      ],
+      "anchor": "bet365",
+      "category_terms": [
+        "betting",
+        "sports betting",
+        "football betting",
+        "horse racing betting",
+        "free bets",
+        "bet builder",
+        "betting sites",
+        "betting odds",
+        "acca"
+      ],
+      "brand_terms": [
+        "sky bet",
+        "paddy power",
+        "betfair",
+        "bet365",
+        "william hill",
+        "ladbrokes",
+        "betfred"
+      ],
+      "related_terms": [
+        "betting",
+        "free bets",
+        "betting sites",
+        "bet builder"
+      ],
+      "impact_terms": [
+        "betting",
+        "free bets",
+        "bet builder",
+        "football betting",
+        "horse racing tips"
+      ],
+      "impact_brands": [
+        "bet365"
+      ],
+      "default_panel": "drv1",
+      "daily_group": "d3",
+      "daily_brand_group": "d2",
+      "highlight": "bet365"
+    },
+    "gaming": {
+      "label": "Gaming",
+      "noun": "gaming",
+      "headline_term": "online casino",
+      "our_brands": [
+        "sky vegas",
+        "sky bingo",
+        "sky casino",
+        "paddy power games",
+        "paddy power bingo",
+        "betfair casino",
+        "betfair bingo"
+      ],
+      "anchor": "sky vegas",
+      "category_terms": [
+        "online casino",
+        "slots",
+        "online slots",
+        "bingo",
+        "online bingo",
+        "free spins",
+        "casino bonus",
+        "roulette",
+        "live casino"
+      ],
+      "brand_terms": [
+        "sky vegas",
+        "sky bingo",
+        "sky casino",
+        "paddy power games",
+        "paddy power bingo",
+        "betfair casino",
+        "betfair bingo",
+        "tombola",
+        "mecca bingo",
+        "gala bingo",
+        "foxy bingo",
+        "jackpotjoy",
+        "virgin games",
+        "888 casino",
+        "grosvenor casino",
+        "mrq"
+      ],
+      "related_terms": [
+        "online casino",
+        "free spins",
+        "bingo sites",
+        "slot sites"
+      ],
+      "impact_terms": [
+        "online casino",
+        "slots",
+        "bingo",
+        "free spins"
+      ],
+      "impact_brands": [
+        "tombola"
+      ],
+      "default_panel": "gcat1",
+      "daily_group": "gd1",
+      "daily_brand_group": "gd2",
+      "highlight": "tombola",
+      "segments": {
+        "bingo": [
+          "sky bingo",
+          "paddy power bingo",
+          "betfair bingo",
+          "tombola",
+          "mecca bingo",
+          "gala bingo",
+          "foxy bingo",
+          "jackpotjoy",
+          "buzz bingo",
+          "heart bingo"
+        ],
+        "casino and slots": [
+          "sky vegas",
+          "sky casino",
+          "paddy power games",
+          "betfair casino",
+          "virgin games",
+          "888 casino",
+          "grosvenor casino",
+          "mrq",
+          "leovegas",
+          "bet365 casino",
+          "mr vegas"
+        ]
+      }
+    }
+  },
+  "tv": {
+    "yoy_terms": [
+      "strictly come dancing",
+      "i'm a celebrity",
+      "the traitors",
+      "big brother",
+      "love island",
+      "britain's got talent",
+      "deal or no deal",
+      "the chase"
+    ]
+  },
+  "fixture_popularity": {
+    "_readme": "Match popularity score = competition weight x (0.5 + club A + club B) x rivalry multiplier; European ties with no UK club are multiplied by no_uk_club_multiplier. A judgement-based proxy for how much UK interest a match draws, not a measured audience. Edit the weights and lists to taste.",
+    "competition_weight": {
+      "eng.1": 1.0,
+      "uefa.champions": 0.9,
+      "uefa.europa": 0.5,
+      "eng.fa": 0.5,
+      "eng.league_cup": 0.4,
+      "eng.2": 0.3,
+      "sco.1": 0.3,
+      "fifa.worldq.uefa": 0.8,
+      "uefa.nations": 0.7,
+      "fifa.friendly": 0.4
+    },
+    "club_tiers": {
+      "big club": {
+        "score": 1.0,
+        "teams": [
+          "Liverpool",
+          "Manchester United",
+          "Manchester City",
+          "Arsenal",
+          "Chelsea",
+          "Tottenham Hotspur"
+        ]
+      },
+      "well-supported club": {
+        "score": 0.5,
+        "teams": [
+          "Newcastle United",
+          "Aston Villa",
+          "Everton",
+          "West Ham United",
+          "Leeds United",
+          "Sunderland",
+          "Nottingham Forest",
+          "Celtic",
+          "Rangers"
+        ]
+      },
+      "European giant": {
+        "score": 0.5,
+        "teams": [
+          "Real Madrid",
+          "Barcelona",
+          "Bayern Munich",
+          "Paris Saint-Germain",
+          "Juventus",
+          "Internazionale",
+          "AC Milan",
+          "Atlético Madrid",
+          "Borussia Dortmund"
+        ]
+      }
+    },
+    "nations": {
+      "England": 1.0,
+      "Scotland": 0.6,
+      "Wales": 0.5,
+      "Republic of Ireland": 0.5,
+      "Northern Ireland": 0.4
+    },
+    "default_uk_club": 0.2,
+    "default_other": 0.05,
+    "rivalry_multiplier": 1.25,
+    "no_uk_club_multiplier": 0.3,
+    "rivalries": [
+      [
+        "Liverpool",
+        "Manchester United"
+      ],
+      [
+        "Liverpool",
+        "Everton"
+      ],
+      [
+        "Liverpool",
+        "Manchester City"
+      ],
+      [
+        "Manchester United",
+        "Manchester City"
+      ],
+      [
+        "Manchester United",
+        "Leeds United"
+      ],
+      [
+        "Manchester United",
+        "Arsenal"
+      ],
+      [
+        "Arsenal",
+        "Tottenham Hotspur"
+      ],
+      [
+        "Arsenal",
+        "Chelsea"
+      ],
+      [
+        "Chelsea",
+        "Tottenham Hotspur"
+      ],
+      [
+        "Newcastle United",
+        "Sunderland"
+      ],
+      [
+        "Aston Villa",
+        "Birmingham City"
+      ],
+      [
+        "Celtic",
+        "Rangers"
+      ],
+      [
+        "Heart of Midlothian",
+        "Hibernian"
+      ],
+      [
+        "Sheffield United",
+        "Leeds United"
+      ],
+      [
+        "Cardiff City",
+        "Swansea City"
+      ],
+      [
+        "England",
+        "Scotland"
+      ],
+      [
+        "England",
+        "Wales"
+      ]
+    ]
+  }
+}

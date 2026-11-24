@@ -1,0 +1,83 @@
+name: Daily Google Trends refresh
+
+on:
+  schedule:
+    # 05:37 UTC every day (off the hour, when GitHub's scheduler is quieter)
+    - cron: "37 5 * * *"
+  push:
+    # Re-publish (without fetching) when you edit the page, config or fixtures,
+    # or when a local Mac run pushes fresh data.
+    branches: [main]
+    paths: ["index.html", "config.json", "data/**"]
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Re-pull every group, ignoring time-to-live"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: trends-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Random start delay (0-15 min) so runs never hit Google on the same second
+        if: github.event_name == 'schedule'
+        run: sleep $(( RANDOM % 900 ))
+
+      - name: Put files uploaded to the top level into their folders
+        run: |
+          mkdir -p data scripts
+          for f in trends.json matches.json fixtures.json social.json status.json; do
+            if [ -f "$f" ]; then git mv -f "$f" "data/$f"; fi
+          done
+          if [ -f fetch_trends.py ]; then git mv -f fetch_trends.py scripts/fetch_trends.py; fi
+
+      - name: Get the chart library (built into the single-file copy)
+        run: mkdir -p vendor && curl -sfL https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js -o vendor/chart.umd.js
+
+      - name: Fetch Google Trends
+        if: github.event_name != 'push'
+        env:
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+          HTTPS_PROXY: ${{ secrets.TRENDS_PROXY }}
+        run: |
+          if [ "${{ inputs.force }}" = "true" ]; then
+            python3 scripts/fetch_trends.py --force
+          else
+            python3 scripts/fetch_trends.py
+          fi
+
+      - name: Rebuild page data (push runs)
+        if: github.event_name == 'push'
+        run: python3 scripts/fetch_trends.py --build-only
+
+      - name: Commit updated data
+        run: |
+          git config user.name  "trends-bot"
+          git config user.email "trends-bot@users.noreply.github.com"
+          git add -A data scripts
+          git diff --cached --quiet || git commit -m "data: Google Trends refresh $(date -u +%Y-%m-%d)"
+          git push
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deploy
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,1 @@
+window.GSC_FILES = [];

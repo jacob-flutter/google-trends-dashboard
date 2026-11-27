@@ -43,15 +43,15 @@
  },
  "d2": {
   "error": null,
-  "ok_at": "2026-11-26T06:28:53Z",
+  "ok_at": "2026-11-27T06:32:57Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:27:26Z"
+  "tried_at": "2026-11-27T06:31:22Z"
  },
  "d3": {
   "error": null,
-  "ok_at": "2026-11-26T06:29:22Z",
+  "ok_at": "2026-11-27T06:33:19Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:29:07Z"
+  "tried_at": "2026-11-27T06:33:07Z"
  },
  "drv1": {
   "error": null,
@@ -67,9 +67,9 @@
  },
  "fixtures:espn": {
   "error": null,
-  "ok_at": "2026-11-26T06:27:26Z",
+  "ok_at": "2026-11-27T06:31:22Z",
   "source": "espn scoreboard",
-  "tried_at": "2026-11-26T06:27:26Z"
+  "tried_at": "2026-11-27T06:31:22Z"
  },
  "gbr1": {
   "error": null,
@@ -127,15 +127,15 @@
  },
  "gd1": {
   "error": null,
-  "ok_at": "2026-11-26T06:29:46Z",
+  "ok_at": "2026-11-27T06:33:40Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:29:33Z"
+  "tried_at": "2026-11-27T06:33:26Z"
  },
  "gd2": {
   "error": null,
-  "ok_at": "2026-11-26T06:30:09Z",
+  "ok_at": "2026-11-27T06:34:00Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:29:58Z"
+  "tried_at": "2026-11-27T06:33:51Z"
  },
  "related:bet builder": {
   "error": null,
@@ -211,296 +211,296 @@
  },
  "yoy:888 casino": {
   "error": null,
-  "ok_at": "2026-11-26T06:45:39Z",
+  "ok_at": "2026-11-27T06:48:48Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:45:28Z"
+  "tried_at": "2026-11-27T06:48:38Z"
  },
  "yoy:acca": {
   "error": null,
-  "ok_at": "2026-11-26T06:33:11Z",
+  "ok_at": "2026-11-27T06:37:12Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:33:04Z"
+  "tried_at": "2026-11-27T06:36:59Z"
  },
  "yoy:bet builder": {
   "error": null,
-  "ok_at": "2026-11-26T06:32:11Z",
+  "ok_at": "2026-11-27T06:36:05Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:32:03Z"
+  "tried_at": "2026-11-27T06:35:57Z"
  },
  "yoy:bet365": {
   "error": null,
-  "ok_at": "2026-11-26T06:34:23Z",
+  "ok_at": "2026-11-27T06:38:32Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:34:10Z"
+  "tried_at": "2026-11-27T06:38:19Z"
  },
  "yoy:betfair": {
   "error": null,
-  "ok_at": "2026-11-26T06:34:00Z",
+  "ok_at": "2026-11-27T06:38:09Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:33:53Z"
+  "tried_at": "2026-11-27T06:38:02Z"
  },
  "yoy:betfair bingo": {
   "error": null,
-  "ok_at": "2026-11-26T06:42:21Z",
+  "ok_at": "2026-11-27T06:46:19Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:42:07Z"
+  "tried_at": "2026-11-27T06:46:12Z"
  },
  "yoy:betfair casino": {
   "error": null,
-  "ok_at": "2026-11-26T06:42:00Z",
+  "ok_at": "2026-11-27T06:46:05Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:41:54Z"
+  "tried_at": "2026-11-27T06:45:55Z"
  },
  "yoy:betfred": {
   "error": null,
-  "ok_at": "2026-11-26T06:35:26Z",
+  "ok_at": "2026-11-27T06:39:41Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:35:19Z"
+  "tried_at": "2026-11-27T06:39:27Z"
  },
  "yoy:betting": {
   "error": null,
-  "ok_at": "2026-11-26T06:30:28Z",
+  "ok_at": "2026-11-27T06:34:25Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:30:17Z"
+  "tried_at": "2026-11-27T06:34:13Z"
  },
  "yoy:betting odds": {
   "error": null,
-  "ok_at": "2026-11-26T06:32:53Z",
+  "ok_at": "2026-11-27T06:36:45Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:32:41Z"
+  "tried_at": "2026-11-27T06:36:35Z"
  },
  "yoy:betting sites": {
   "error": null,
-  "ok_at": "2026-11-26T06:32:28Z",
+  "ok_at": "2026-11-27T06:36:27Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:32:19Z"
+  "tried_at": "2026-11-27T06:36:13Z"
  },
  "yoy:big brother": {
   "error": null,
-  "ok_at": "2026-11-26T06:47:47Z",
+  "ok_at": "2026-11-27T06:50:49Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:47:34Z"
+  "tried_at": "2026-11-27T06:50:35Z"
  },
  "yoy:bingo": {
   "error": null,
-  "ok_at": "2026-11-26T06:36:59Z",
+  "ok_at": "2026-11-27T06:41:07Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:36:50Z"
+  "tried_at": "2026-11-27T06:40:58Z"
  },
  "yoy:britain's got talent": {
   "error": null,
-  "ok_at": "2026-11-26T06:48:20Z",
+  "ok_at": "2026-11-27T06:52:44Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:48:13Z"
+  "tried_at": "2026-11-27T06:51:19Z"
  },
  "yoy:casino bonus": {
   "error": null,
-  "ok_at": "2026-11-26T06:39:12Z",
+  "ok_at": "2026-11-27T06:42:12Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:39:02Z"
+  "tried_at": "2026-11-27T06:42:05Z"
  },
  "yoy:deal or no deal": {
   "error": null,
-  "ok_at": "2026-11-26T06:48:40Z",
+  "ok_at": "2026-11-27T06:53:03Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:48:32Z"
+  "tried_at": "2026-11-27T06:52:53Z"
  },
  "yoy:football betting": {
   "error": null,
-  "ok_at": "2026-11-26T06:31:10Z",
+  "ok_at": "2026-11-27T06:35:04Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:31:00Z"
+  "tried_at": "2026-11-27T06:34:52Z"
  },
  "yoy:foxy bingo": {
   "error": null,
-  "ok_at": "2026-11-26T06:44:43Z",
+  "ok_at": "2026-11-27T06:47:46Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:44:30Z"
+  "tried_at": "2026-11-27T06:47:36Z"
  },
  "yoy:free bets": {
   "error": null,
-  "ok_at": "2026-11-26T06:31:55Z",
+  "ok_at": "2026-11-27T06:35:45Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:31:44Z"
+  "tried_at": "2026-11-27T06:35:35Z"
  },
  "yoy:free spins": {
   "error": null,
-  "ok_at": "2026-11-26T06:38:54Z",
+  "ok_at": "2026-11-27T06:41:56Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:38:42Z"
+  "tried_at": "2026-11-27T06:41:46Z"
  },
  "yoy:gala bingo": {
   "error": null,
-  "ok_at": "2026-11-26T06:44:21Z",
+  "ok_at": "2026-11-27T06:47:26Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:44:07Z"
+  "tried_at": "2026-11-27T06:47:14Z"
  },
  "yoy:grosvenor casino": {
   "error": null,
-  "ok_at": "2026-11-26T06:46:00Z",
+  "ok_at": "2026-11-27T06:49:04Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:45:51Z"
+  "tried_at": "2026-11-27T06:48:57Z"
  },
  "yoy:horse racing betting": {
   "error": null,
-  "ok_at": "2026-11-26T06:31:36Z",
+  "ok_at": "2026-11-27T06:35:28Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:31:23Z"
+  "tried_at": "2026-11-27T06:35:18Z"
  },
  "yoy:i'm a celebrity": {
   "error": null,
-  "ok_at": "2026-11-26T06:46:58Z",
+  "ok_at": "2026-11-27T06:50:02Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:46:44Z"
+  "tried_at": "2026-11-27T06:49:52Z"
  },
  "yoy:jackpotjoy": {
   "error": null,
-  "ok_at": "2026-11-26T06:45:07Z",
+  "ok_at": "2026-11-27T06:48:09Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:44:54Z"
+  "tried_at": "2026-11-27T06:47:55Z"
  },
  "yoy:ladbrokes": {
   "error": null,
-  "ok_at": "2026-11-26T06:35:12Z",
+  "ok_at": "2026-11-27T06:39:16Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:34:58Z"
+  "tried_at": "2026-11-27T06:39:03Z"
  },
  "yoy:live casino": {
   "error": null,
-  "ok_at": "2026-11-26T06:40:04Z",
+  "ok_at": "2026-11-27T06:44:15Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:39:53Z"
+  "tried_at": "2026-11-27T06:42:52Z"
  },
  "yoy:love island": {
   "error": null,
-  "ok_at": "2026-11-26T06:48:05Z",
+  "ok_at": "2026-11-27T06:51:12Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:47:53Z"
+  "tried_at": "2026-11-27T06:51:03Z"
  },
  "yoy:mecca bingo": {
   "error": null,
-  "ok_at": "2026-11-26T06:44:00Z",
+  "ok_at": "2026-11-27T06:47:01Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:42:46Z"
+  "tried_at": "2026-11-27T06:46:49Z"
  },
  "yoy:mrq": {
   "error": null,
-  "ok_at": "2026-11-26T06:46:18Z",
+  "ok_at": "2026-11-27T06:49:22Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:46:09Z"
+  "tried_at": "2026-11-27T06:49:11Z"
  },
  "yoy:online bingo": {
   "error": null,
-  "ok_at": "2026-11-26T06:38:30Z",
+  "ok_at": "2026-11-27T06:41:33Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:37:09Z"
+  "tried_at": "2026-11-27T06:41:21Z"
  },
  "yoy:online casino": {
   "error": null,
-  "ok_at": "2026-11-26T06:35:50Z",
+  "ok_at": "2026-11-27T06:40:03Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:35:40Z"
+  "tried_at": "2026-11-27T06:39:50Z"
  },
  "yoy:online slots": {
   "error": null,
-  "ok_at": "2026-11-26T06:36:36Z",
+  "ok_at": "2026-11-27T06:40:51Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:36:29Z"
+  "tried_at": "2026-11-27T06:40:38Z"
  },
  "yoy:paddy power": {
   "error": null,
-  "ok_at": "2026-11-26T06:33:47Z",
+  "ok_at": "2026-11-27T06:37:51Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:33:40Z"
+  "tried_at": "2026-11-27T06:37:44Z"
  },
  "yoy:paddy power bingo": {
   "error": null,
-  "ok_at": "2026-11-26T06:41:44Z",
+  "ok_at": "2026-11-27T06:45:46Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:41:35Z"
+  "tried_at": "2026-11-27T06:45:37Z"
  },
  "yoy:paddy power games": {
   "error": null,
-  "ok_at": "2026-11-26T06:41:26Z",
+  "ok_at": "2026-11-27T06:45:27Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:41:16Z"
+  "tried_at": "2026-11-27T06:45:17Z"
  },
  "yoy:roulette": {
   "error": null,
-  "ok_at": "2026-11-26T06:39:40Z",
+  "ok_at": "2026-11-27T06:42:38Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:39:26Z"
+  "tried_at": "2026-11-27T06:42:25Z"
  },
  "yoy:sky bet": {
   "error": null,
-  "ok_at": "2026-11-26T06:33:27Z",
+  "ok_at": "2026-11-27T06:37:37Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:33:18Z"
+  "tried_at": "2026-11-27T06:37:23Z"
  },
  "yoy:sky bingo": {
   "error": null,
-  "ok_at": "2026-11-26T06:40:43Z",
+  "ok_at": "2026-11-27T06:44:49Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:40:32Z"
+  "tried_at": "2026-11-27T06:44:42Z"
  },
  "yoy:sky casino": {
   "error": null,
-  "ok_at": "2026-11-26T06:41:08Z",
+  "ok_at": "2026-11-27T06:45:11Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:40:54Z"
+  "tried_at": "2026-11-27T06:45:01Z"
  },
  "yoy:sky vegas": {
   "error": null,
-  "ok_at": "2026-11-26T06:40:25Z",
+  "ok_at": "2026-11-27T06:44:35Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:40:16Z"
+  "tried_at": "2026-11-27T06:44:25Z"
  },
  "yoy:slots": {
   "error": null,
-  "ok_at": "2026-11-26T06:36:15Z",
+  "ok_at": "2026-11-27T06:40:27Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:36:01Z"
+  "tried_at": "2026-11-27T06:40:17Z"
  },
  "yoy:sports betting": {
   "error": null,
-  "ok_at": "2026-11-26T06:30:51Z",
+  "ok_at": "2026-11-27T06:34:45Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:30:42Z"
+  "tried_at": "2026-11-27T06:34:37Z"
  },
  "yoy:strictly come dancing": {
   "error": null,
-  "ok_at": "2026-11-26T06:46:36Z",
+  "ok_at": "2026-11-27T06:49:38Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:46:27Z"
+  "tried_at": "2026-11-27T06:49:32Z"
  },
  "yoy:the chase": {
   "error": null,
-  "ok_at": "2026-11-26T06:48:54Z",
+  "ok_at": "2026-11-27T06:53:23Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:48:47Z"
+  "tried_at": "2026-11-27T06:53:15Z"
  },
  "yoy:the traitors": {
   "error": null,
-  "ok_at": "2026-11-26T06:47:22Z",
+  "ok_at": "2026-11-27T06:50:26Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:47:12Z"
+  "tried_at": "2026-11-27T06:50:12Z"
  },
  "yoy:tombola": {
   "error": null,
-  "ok_at": "2026-11-26T06:42:38Z",
+  "ok_at": "2026-11-27T06:46:37Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:42:27Z"
+  "tried_at": "2026-11-27T06:46:27Z"
  },
  "yoy:virgin games": {
   "error": null,
-  "ok_at": "2026-11-26T06:45:22Z",
+  "ok_at": "2026-11-27T06:48:30Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:45:14Z"
+  "tried_at": "2026-11-27T06:48:21Z"
  },
  "yoy:william hill": {
   "error": null,
-  "ok_at": "2026-11-26T06:34:45Z",
+  "ok_at": "2026-11-27T06:38:52Z",
   "source": "google",
-  "tried_at": "2026-11-26T06:34:36Z"
+  "tried_at": "2026-11-27T06:38:39Z"
  }
 }
